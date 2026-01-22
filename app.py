@@ -90,21 +90,25 @@ mc_selected = st.selectbox(
 
 mc_data = df[df["MC"] == mc_selected]
 
+# colunas reais de resultados (PRECISAM existir no df)
+result_cols = ["VT (4)", "VC (3)", "SM (2)", "2ªF (1)"]
+
 col1, col2 = st.columns(2)
 
 with col1:
-  fig_mc_bar = px.bar(
-    mc_data.melt(
-        id_vars="MC",
-        value_vars=result_cols
-    ),
-    x="variable",
-    y="value",
-    text="value",
-    title=f"Resultados de {mc_selected}",
-    color_discrete_sequence=["#1DB954"]
-)
-st.plotly_chart(fig_mc_bar, use_container_width=True)
+    fig_mc_bar = px.bar(
+        mc_data.melt(
+            id_vars="MC",
+            value_vars=result_cols
+        ),
+        x="variable",
+        y="value",
+        text="value",
+        title=f"Resultados de {mc_selected}",
+        color_discrete_sequence=["#1DB954"]
+    )
+
+    st.plotly_chart(fig_mc_bar, use_container_width=True)
 
 with col2:
     st.subheader("📋 Resumo do Desempenho")
@@ -116,6 +120,7 @@ with col2:
             "2ªF (1)": "Segunda Fase"
         })
     )
+
 st.subheader("⚔️ Comparação entre MCs")
 
 mc_compare = st.multiselect(
@@ -135,6 +140,7 @@ if len(mc_compare) > 0:
     color_discrete_sequence=["#1DB954", "#A3E635"]
 )
     st.plotly_chart(fig_compare, use_container_width=True)
+
 
 
 
