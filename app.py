@@ -38,7 +38,7 @@ col1.metric("MCs no Ranking", len(df))
 col2.metric("Líder Atual", df.iloc[0]["MC"])
 col3.metric("Mais Títulos", df.loc[df["VT (4)"].idxmax()]["MC"])
 col4.metric("Mais Vices", df.loc[df["VC (3)"].idxmax()]["MC"])
-col4.metric(
+col5.metric(
     "Mais 2x0 ",
     df.loc[df["2x0 (1)"].idxmax()]["MC"]
 )
@@ -146,6 +146,7 @@ if len(mcs_compare) == 2:
     st.plotly_chart(fig_compare, use_container_width=True)
 else:
     st.info("Selecione exatamente dois MCs para visualizar a comparação.")
+
 
 
 
