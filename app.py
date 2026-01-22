@@ -123,23 +123,30 @@ with col2:
 
 st.subheader("⚔️ Comparação entre MCs")
 
-mc_compare = st.multiselect(
-    "Escolha até 2 MCs",
+mcs_compare = st.multiselect(
+    "Selecione até dois MCs para comparar",
     df["MC"].unique(),
     max_selections=2
 )
 
-if len(mc_compare) > 0:
-    df_compare = df[df["MC"].isin(mc_compare)]
-    ig_compare = px.bar(
-    df_compare,
-    x="MC",
-    y=result_cols,
-    barmode="group",
-    title="Comparação de Resultados",
-    color_discrete_sequence=["#1DB954", "#A3E635"]
-)
+if len(mcs_compare) == 2:
+    df_compare = df[df["MC"].isin(mcs_compare)]
+
+    result_cols = ["VT (4)", "VC (3)", "SM (2)", "2ªF (1)"]
+
+    fig_compare = px.bar(
+        df_compare,
+        x="MC",
+        y=result_cols,
+        barmode="group",
+        title="Comparação de Resultados",
+        color_discrete_sequence=["#1DB954", "#A3E635"]
+    )
+
     st.plotly_chart(fig_compare, use_container_width=True)
+else:
+    st.info("Selecione exatamente dois MCs para visualizar a comparação.")
+
 
 
 
