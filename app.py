@@ -92,7 +92,7 @@ with col1:
     title=f"Resultados de {mc_selected}",
     color_discrete_sequence=["#1DB954"]
 )
-    st.plotly_chart(fig_mc_bar, use_container_width=True)
+st.plotly_chart(fig_mc_bar, use_container_width=True)
 
 with col2:
     st.subheader("📋 Resumo do Desempenho")
@@ -123,5 +123,6 @@ if len(mc_compare) > 0:
     color_discrete_sequence=["#1DB954", "#A3E635"]
 )
     st.plotly_chart(fig_compare, use_container_width=True)
+
 
 
