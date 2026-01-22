@@ -124,3 +124,4 @@ if len(mc_compare) > 0:
 )
     st.plotly_chart(fig_compare, use_container_width=True)
 
+
