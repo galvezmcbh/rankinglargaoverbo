@@ -33,7 +33,7 @@ df.fillna(0, inplace=True)
 st.title("💚 Ranking Larga o Verbo")
 st.caption("Análise de performance e evolução dos MCs")
 
-col1, col2, col3, col4, col5 = st.columns([1, 1, 1, 1, 1])
+col1, col2, col3, col4, col5 = st.columns([1, 1, 1, 1, 1, 1])
 col1.metric("MCs no Ranking", len(df))
 col2.metric("Líder Atual", df.iloc[0]["MC"])
 col3.metric("Mais Títulos", df.loc[df["VT (4)"].idxmax()]["MC"])
@@ -146,6 +146,7 @@ if len(mcs_compare) == 2:
     st.plotly_chart(fig_compare, use_container_width=True)
 else:
     st.info("Selecione exatamente dois MCs para visualizar a comparação.")
+
 
 
 
