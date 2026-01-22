@@ -21,12 +21,19 @@ st.set_page_config(
 )
 
 df = pd.read_excel("RANKING_LARGA_O_VERBO.xlsx")
+result_cols = [
+    "VT (4)",
+    "VICE (2)",
+    "SEMIS (1)",
+    "2x0 (1)"
+]
+
 df.fillna(0, inplace=True)
 
 st.title("💚 Ranking Larga o Verbo")
 st.caption("Análise de performance e evolução dos MCs")
 
-col1, col2, col3, col4, col5 = st.columns(5)
+col1, col2, col3, col4, col5 = st.columns([1, 1, 1, 1, 1])
 col1.metric("MCs no Ranking", len(df))
 col2.metric("Líder Atual", df.iloc[0]["MC"])
 col3.metric("Mais Títulos", df.loc[df["VT (4)"].idxmax()]["MC"])
@@ -54,21 +61,26 @@ st.plotly_chart(fig_rank, use_container_width=True)
 st.subheader("📝 Leituras de Desempenho")
 
 for _, row in df.iterrows():
+    top5 = df.sort_values("PTS", ascending=False).head(5)
+
+comentarios_curados = {
+    top5.iloc[0]["MC"]: "Líder do ranking. MC com domínio competitivo claro, alto aproveitamento em fases decisivas e presença constante no topo. Atua com controle e regularidade.",
+    
+    top5.iloc[1]["MC"]: "Principal perseguidor do líder. Extremamente consistente, chega longe em praticamente todas as edições e mantém pressão constante na disputa pelo topo.",
+    
+    top5.iloc[2]["MC"]: "MC estrategicamente perigoso. Alterna picos de performance com quedas pontuais, mas sempre representa ameaça real nas fases finais.",
+    
+    top5.iloc[3]["MC"]: "Nome em consolidação no ranking. Demonstra evolução ao longo das edições e capacidade de disputar com MCs mais experientes.",
+    
+    top5.iloc[4]["MC"]: "MC competitivo e resiliente. Mesmo fora do topo imediato, sustenta presença relevante e pode surpreender em confrontos diretos."
+}
+
+st.subheader("🧠 Análise de desempenho · Top 5")
+
+for _, row in top5.iterrows():
     with st.expander(f"{row['MC']} · {row['PTS']} pts"):
-        comentario = ""
+        st.write(comentarios_curados.get(row["MC"], ""))
 
-        if row["VT (4)"] >= 3:
-            comentario = "MC com histórico forte de títulos, presença dominante nas edições."
-        elif row["VC (3)"] >= 3:
-            comentario = "MC muito consistente, chega em finais com frequência."
-        elif row["SM (2)"] >= 4:
-            comentario = "MC regular, presença constante nas fases finais."
-        elif row["PTS"] < 15:
-            comentario = "MC em fase de construção de trajetória no ranking."
-        else:
-            comentario = "MC competitivo, com participações relevantes no evento."
-
-        st.write(comentario)
 st.subheader("🧬 Análise Individual")
 
 mc_selected = st.selectbox(
@@ -123,6 +135,7 @@ if len(mc_compare) > 0:
     color_discrete_sequence=["#1DB954", "#A3E635"]
 )
     st.plotly_chart(fig_compare, use_container_width=True)
+
 
 
 
