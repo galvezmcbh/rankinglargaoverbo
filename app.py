@@ -224,7 +224,7 @@ with col2:
                 <p><strong>📍 Última edição:</strong> {ultima_edicao if ultima_edicao else "—"}</p>
                 <p><strong>⏱️ Intervalo:</strong> {intervalo} edições</p>
                 {"<p><strong>✨ Edição especial:</strong> sim</p>" if especiais > 0 else ""}
-            </div>
+          </div>
 
         </div>
         """,
@@ -389,6 +389,7 @@ components.html(
     """,
     height=130
 )
+
 
 
 
