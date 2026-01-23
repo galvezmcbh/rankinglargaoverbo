@@ -139,17 +139,40 @@ mc_row = df[df["MC"] == mc_selected].iloc[0]
 col1, col2 = st.columns(2)
 import re
 
-texto = str(linha_mc["Pontos contabilizados"])
-texto_lower = texto.lower()
+with col2:
+    if "Pontos contabilizados" in df.columns:
+        texto = " ".join(
+            df[df["MC"] == mc_selected]["Pontos contabilizados"]
+            .dropna()
+            .astype(str)
+            .tolist()
+        )
+    else:
+        texto = ""
 
-# captura QUALQUER número solto (edições)
-edicoes_raw = re.findall(r"\b\d{1,3}\b", texto_lower)
-edicoes = sorted(set(int(e) for e in edicoes_raw))
+    texto_lower = texto.lower()
 
-total_edicoes = len(edicoes)
-primeira_edicao = min(edicoes) if edicoes else None
-ultima_edicao = max(edicoes) if edicoes else None
-intervalo = (ultima_edicao - primeira_edicao) if total_edicoes >= 2 else 0
+    # captura QUALQUER número solto (edições)
+    edicoes_raw = re.findall(r"\b\d{1,3}\b", texto_lower)
+    edicoes = sorted(set(int(e) for e in edicoes_raw))
+
+    total_edicoes = len(edicoes)
+    primeira_edicao = min(edicoes) if edicoes else "—"
+    ultima_edicao = max(edicoes) if edicoes else "—"
+    intervalo = (ultima_edicao - primeira_edicao) if total_edicoes >= 2 else 0
+
+    # classificação
+    if total_edicoes == 0:
+        perfil_mc = "Sem histórico registrado"
+    elif total_edicoes <= 2:
+        perfil_mc = "MC iniciante"
+    elif total_edicoes >= 8 and intervalo >= 10:
+        perfil_mc = "MC veterano"
+    elif total_edicoes >= 5:
+        perfil_mc = "MC constante"
+    else:
+        perfil_mc = "MC em ascensão"
+
 
 # métricas semânticas
 vitorias = texto_lower.count("vitória")
@@ -309,5 +332,6 @@ components.html(
     """,
     height=140
 )
+
 
 
