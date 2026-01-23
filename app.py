@@ -185,7 +185,8 @@ st.markdown(
 st.markdown(
     """
     <div style="display:flex; gap:20px; margin-top:30px; flex-wrap:wrap;">
-        <a href="https://www.instagram.com/largaoverbo" target="_blank">
+        
+        <a href="https://www.instagram.com/largaoverbo" target="_blank" style="text-decoration:none;">
             <button style="
                 background-color:#1DB954;
                 color:white;
@@ -200,7 +201,7 @@ st.markdown(
             </button>
         </a>
 
-        <a href="https://www.youtube.com/@largaoverbolv" target="_blank">
+        <a href="https://www.youtube.com/@largaoverbolv" target="_blank" style="text-decoration:none;">
             <button style="
                 background-color:#FF0000;
                 color:white;
@@ -214,10 +215,12 @@ st.markdown(
                 ▶️ YouTube · Larga o Verbo
             </button>
         </a>
+
     </div>
     """,
     unsafe_allow_html=True
 )
+
 
 
 
