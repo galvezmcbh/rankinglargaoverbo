@@ -168,7 +168,7 @@ if len(mc_compare) == 2:
 
     # ordem fixa para leitura correta
     ordem_resultados = [
-        "Vitórias",
+        "Títulos",
         "Vices",
         "Semifinais",
         "Vitórias 2x0"
@@ -290,6 +290,7 @@ components.html(
     """,
     height=130
 )
+
 
 
 
