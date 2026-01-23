@@ -341,7 +341,7 @@ if len(mc_compare) == 2:
 # ─────────────────────────────────────────────
 # RODAPÉ · SOBRE O LARGA O VERBO
 # ─────────────────────────────────────────────
-st.markdown("---")
+st.divider()
 
 st.markdown("""
 ## 💚 Largo Verbo
@@ -351,31 +351,37 @@ Ao longo de nossa trajetória, percebemos que o LV vai além do elemento da rima
 
 Nosso foco é fomentar iniciativas que dialoguem diretamente com a juventude local, promovendo ações que englobem tanto os elementos da cultura Hip Hop quanto outras manifestações culturais relevantes.
 """)
-st.markdown(
-)
-"""
-    > *Mais do que rima, o Larga o Verbo é espaço de voz, troca e construção cultural.*
-    """
 
-components.html(
+# FRASE DESTACADA (MENOR, MAIS APAGADA, MAS PRESENTE)
+st.markdown(
     """
-    <div style="display:flex;justify-content:center;gap:24px;margin-top:30px;">
-        <a href="https://www.instagram.com/largaoverbo" target="_blank">
-            <button style="background:#1DB954;color:white;padding:18px 32px;
-            border:none;border-radius:14px;font-size:18px;font-weight:bold;">
-            📲 Instagram · Larga o Verbo
-            </button>
-        </a>
-        <a href="https://www.youtube.com/@largaoverbolv" target="_blank">
-            <button style="background:#7A1FA2;color:white;padding:18px 32px;
-            border:none;border-radius:14px;font-size:18px;font-weight:bold;">
-            ▶️ YouTube · Larga o Verbo
-            </button>
-        </a>
+    <div style="
+        text-align: center;
+        margin: 20px 0 30px 0;
+        font-size: 0.95rem;
+        color: #9b9b9b;
+        font-style: italic;
+    ">
+        Mais do que rima, largo verba espaço de voz, troca e construção cultural
     </div>
     """,
-    height=140
+    unsafe_allow_html=True
 )
+
+# BOTÕES CENTRALIZADOS
+col_esq, col_mid1, col_mid2, col_dir = st.columns([1, 2, 2, 1])
+
+with col_mid1:
+    st.link_button(
+        "📸 Instagram do Larga o Verbo",
+        "https://www.instagram.com/largaoverbo"
+    )
+
+with col_mid2:
+    st.link_button(
+        "▶️ YouTube do Larga o Verbo",
+        "https://www.youtube.com/@largaoverbo"
+    )
 
 
 
