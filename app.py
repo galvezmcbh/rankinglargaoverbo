@@ -323,7 +323,8 @@ mc_selecionado = st.selectbox(
 df_mc_hist = df_historico[df_historico["MC"] == mc_selecionado]
 
 st.line_chart(
-    df_mc_hist.set_index("Ano")["Pontuação"],
+    df_mc_hist.set_index("Ano")["PTS"]
+,
     height=300
 )
 
@@ -401,6 +402,7 @@ components.html(
     """,
     height=140
 )
+
 
 
 
