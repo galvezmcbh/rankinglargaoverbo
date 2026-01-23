@@ -352,6 +352,7 @@ Ao longo de nossa trajetória, percebemos que o LV vai além do elemento da rima
 Nosso foco é fomentar iniciativas que dialoguem diretamente com a juventude local, promovendo ações que englobem tanto os elementos da cultura Hip Hop quanto outras manifestações culturais relevantes.
 """)
 st.markdown(
+)
     """
     > *Mais do que rima, o Larga o Verbo é espaço de voz, troca e construção cultural.*
     """
@@ -375,6 +376,7 @@ components.html(
     """,
     height=140
 )
+
 
 
 
