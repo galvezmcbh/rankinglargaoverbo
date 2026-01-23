@@ -2,6 +2,31 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import streamlit.components.v1 as components
+st.markdown(
+    """
+    <style>
+    /* Multiselect - item selecionado */
+    div[data-baseweb="tag"] {
+        background-color: #7A1FA2 !important;
+        color: white !important;
+        border-radius: 10px;
+        font-weight: 600;
+    }
+
+    /* Ícone de fechar (x) do item selecionado */
+    div[data-baseweb="tag"] svg {
+        fill: white !important;
+    }
+
+    /* Hover no item */
+    div[data-baseweb="tag"]:hover {
+        background-color: #6A1B9A !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 # ─────────────────────────────────────────────
 # Mapeamento dos indicadores do ranking
 # ─────────────────────────────────────────────
@@ -290,6 +315,7 @@ components.html(
     """,
     height=130
 )
+
 
 
 
