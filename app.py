@@ -225,9 +225,10 @@ with col2:
     texto = ""
 
 
-    edicoes = sorted(
-        set(int(e) for e in re.findall(r"\b\d{1,3}\b", texto))
-    )
+    # 🔎 Captura números de edições (números soltos no texto)
+edicoes_raw = re.findall(r"\b\d{1,3}\b", texto_lower)
+edicoes = sorted(set(int(e) for e in edicoes_raw))
+
 
     total_edicoes = len(edicoes)
     primeira = min(edicoes) if edicoes else None
@@ -349,6 +350,7 @@ components.html(
     """,
     height=140
 )
+
 
 
 
