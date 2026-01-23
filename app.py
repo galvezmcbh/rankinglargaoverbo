@@ -158,11 +158,79 @@ with col1:
 
     st.plotly_chart(fig_mc_bar, use_container_width=True)
 
+import re
+
 with col2:
-    st.subheader("📋 Resumo do Desempenho")
-    st.table(
-        mc_data[valid_cols].rename(columns=result_map)
+    st.subheader("📊 Trajetória no Larga o Verbo")
+
+    texto = mc_data["Pontos contabilizados"].iloc[0]
+    texto_lower = texto.lower()
+
+    # 🔎 Captura edições numeradas
+    edicoes_raw = re.findall(r"(\d+)\s*ª?\s*edição", texto_lower)
+    edicoes = sorted([int(e) for e in edicoes_raw])
+
+    total_edicoes = len(edicoes)
+    primeira_edicao = min(edicoes) if edicoes else None
+    ultima_edicao = max(edicoes) if edicoes else None
+    intervalo = (ultima_edicao - primeira_edicao) if edicoes else 0
+
+    # Contagens semânticas
+    vitorias = texto_lower.count("vitória")
+    semifinais = texto_lower.count("semifinal")
+    especiais = texto_lower.count("especial")
+
+    # 🎭 Classificação simbólica
+    if total_edicoes >= 8 and intervalo >= 15:
+        perfil = "🎖️ MC Veterano"
+        descricao = "Presença histórica, atravessando várias fases do Larga o Verbo."
+    elif total_edicoes >= 6 and intervalo < 10:
+        perfil = "🔥 MC Constante"
+        descricao = "Participação frequente e recorrente nas edições."
+    elif total_edicoes <= 4 and ultima_edicao and ultima_edicao >= max(edicoes) - 3:
+        perfil = "🌱 MC em Ascensão"
+        descricao = "Chegada recente, com crescimento e presença atual."
+    else:
+        perfil = "🌒 Participação Pontual"
+        descricao = "Atuação mais espaçada ou seletiva ao longo do projeto."
+
+    # 🟩🟪 CARD HORIZONTAL
+    st.markdown(
+        f"""
+        <div style="
+            display:flex;
+            flex-direction:row;
+            gap:24px;
+            padding:24px;
+            border-radius:18px;
+            background:linear-gradient(135deg, #1DB95422, #6A0DAD22);
+            border:2px solid #6A0DAD55;
+            align-items:center;
+            margin-top:16px;
+        ">
+
+            <div style="flex:1;">
+                <h3 style="margin:0; color:#6A0DAD;">{perfil}</h3>
+                <p style="margin:6px 0 0 0; color:#1DB954; font-weight:600;">
+                    {descricao}
+                </p>
+            </div>
+
+            <div style="flex:1; color:white;">
+                <p><strong>🎤 Edições:</strong> {total_edicoes}</p>
+                <p><strong>🏆 Vitórias:</strong> {vitorias}</p>
+                <p><strong>🥈 Semifinais:</strong> {semifinais}</p>
+                <p><strong>📍 Primeira edição:</strong> {primeira_edicao if primeira_edicao else "—"}</p>
+                <p><strong>📍 Última edição:</strong> {ultima_edicao if ultima_edicao else "—"}</p>
+                <p><strong>⏱️ Intervalo:</strong> {intervalo} edições</p>
+                {"<p><strong>✨ Edição especial:</strong> sim</p>" if especiais > 0 else ""}
+            </div>
+
+        </div>
+        """,
+        unsafe_allow_html=True
     )
+
     
 st.subheader("⚔️ Comparação entre MCs")
 
@@ -321,6 +389,7 @@ components.html(
     """,
     height=130
 )
+
 
 
 
