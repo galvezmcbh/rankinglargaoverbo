@@ -122,6 +122,20 @@ ano_selecionado = st.selectbox(
 # CARREGAMENTO DOS DADOS
 # ─────────────────────────────────────────────
 df = pd.read_excel(arquivo_atual)
+# ─────────────────────────────────────────────
+# Normalização de colunas (anti-KeyError)
+# ─────────────────────────────────────────────
+
+df.columns = df.columns.str.strip()
+
+aliases = {
+    "VICE (2)": "VC (3)",
+    "SEMIS (1)": "SM (2)",
+    "2x0": "2x0 (1)"
+}
+
+df.rename(columns=aliases, inplace=True)
+
 df["Ano"] = int(ano_selecionado)
 df.fillna(0, inplace=True)
 
@@ -335,5 +349,6 @@ components.html(
     """,
     height=140
 )
+
 
 
