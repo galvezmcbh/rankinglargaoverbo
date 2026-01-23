@@ -92,7 +92,7 @@ mc_selected = st.selectbox(
 mc_data = df[df["MC"] == mc_selected]
 
 # colunas reais de resultados (PRECISAM existir no df)
-result_cols = ["VT (4)", "VC (3)", "SM (2)", "2ªF (1)"]
+result_cols = ["VT (4)", "VC (3)", "SM (2)", "2x0 (1)"]
 
 col1, col2 = st.columns(2)
 
@@ -113,14 +113,14 @@ with col1:
 
 with col2:
     st.subheader("📋 Resumo do Desempenho")
-    st.table(
-        mc_data[result_cols].rename(columns={
-            "VT (4)": "Títulos",
-            "VC (3)": "Vices",
-            "SM (2)": "Semifinais",
-            "2ªF (1)": "Segunda Fase"
-        })
-    )
+   st.table(
+    mc_data[result_cols].rename(columns={
+        "VT (4)": "Títulos",
+        "VC (3)": "Vices",
+        "SM (2)": "Semifinais",
+        "2x0 (1)": "Vitórias 2x0"
+    })
+)
 
 st.subheader("⚔️ Comparação entre MCs")
 
@@ -228,6 +228,7 @@ components.html(
     """,
     height=130
 )
+
 
 
 
