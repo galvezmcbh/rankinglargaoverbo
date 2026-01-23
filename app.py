@@ -369,19 +369,48 @@ st.markdown(
 )
 
 # BOTÕES CENTRALIZADOS
-col_esq, col_mid1, col_mid2, col_dir = st.columns([1, 2, 2, 1])
+st.markdown(
+    """
+    <div style="
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        margin-top: 20px;
+    ">
+        <a href="https://www.instagram.com/largaoverbo" target="_blank">
+            <button style="
+                background-color: #1DB954;
+                color: white;
+                padding: 14px 24px;
+                border: none;
+                border-radius: 12px;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: pointer;
+            ">
+                📸 Instagram
+            </button>
+        </a>
 
-with col_mid1:
-    st.link_button(
-        "📸 Instagram do Larga o Verbo",
-        "https://www.instagram.com/largaoverbo"
-    )
+        <a href="https://www.youtube.com/@largaoverbolv" target="_blank">
+            <button style="
+                background-color: #7A1FA2;
+                color: white;
+                padding: 14px 24px;
+                border: none;
+                border-radius: 12px;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: pointer;
+            ">
+                ▶️ YouTube
+            </button>
+        </a>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
-with col_mid2:
-    st.link_button(
-        "▶️ YouTube do Larga o Verbo",
-        "https://www.youtube.com/@largaoverbo"
-    )
 
 
 
