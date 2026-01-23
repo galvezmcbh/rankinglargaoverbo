@@ -221,7 +221,7 @@ with col2:
         .astype(str)
         .tolist()
     )
-else:
+   else:
     texto = ""
 
 
@@ -349,6 +349,7 @@ components.html(
     """,
     height=140
 )
+
 
 
 
