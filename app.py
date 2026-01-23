@@ -200,7 +200,16 @@ with col1:
 
 # ── Card de trajetória (edições)
 with col2:
-    texto = str(mc_data["Pontos contabilizados"].iloc[0]).lower()
+   if "Pontos contabilizados" in mc_data.columns:
+    texto = " ".join(
+        mc_data["Pontos contabilizados"]
+        .dropna()
+        .astype(str)
+        .tolist()
+    )
+else:
+    texto = ""
+
 
     edicoes = sorted(
         set(int(e) for e in re.findall(r"\b\d{1,3}\b", texto))
@@ -326,4 +335,5 @@ components.html(
     """,
     height=140
 )
+
 
