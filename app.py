@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import streamlit.components.v1 as components
 st.markdown("""
 <style>
     body {
@@ -182,10 +183,15 @@ st.markdown(
     "> *Mais do que rima, o Larga o Verbo é espaço de voz, troca e construção cultural.*"
 )
 
-st.markdown(
+components.html(
     """
-    <div style="display:flex; gap:20px; margin-top:30px; flex-wrap:wrap;">
-        
+    <div style="
+        display:flex;
+        gap:20px;
+        margin-top:30px;
+        flex-wrap:wrap;
+    ">
+
         <a href="https://www.instagram.com/largaoverbo" target="_blank" style="text-decoration:none;">
             <button style="
                 background-color:#1DB954;
@@ -218,8 +224,9 @@ st.markdown(
 
     </div>
     """,
-    unsafe_allow_html=True
+    height=120
 )
+
 
 
 
