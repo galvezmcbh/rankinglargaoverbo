@@ -167,7 +167,7 @@ with col2:
     texto_lower = texto.lower()
 
     # 🔎 Captura edições numeradas
-    edicoes_raw = re.findall(r"(\d+)\s*ª?\s*edição", texto_lower)
+    edicoes_raw = re.findall(r"(\d+)\s*ª?\s*ed", texto_lower)
     edicoes = sorted([int(e) for e in edicoes_raw])
 
     total_edicoes = len(edicoes)
@@ -389,6 +389,7 @@ components.html(
     """,
     height=130
 )
+
 
 
 
