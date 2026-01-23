@@ -135,29 +135,75 @@ with col2:
     
 st.subheader("⚔️ Comparação entre MCs")
 
-mcs_compare = st.multiselect(
-    "Selecione até dois MCs para comparar",
+mc_compare = st.multiselect(
+    "Selecione dois MCs para comparar",
     df["MC"].unique(),
     max_selections=2
 )
 
-if len(mcs_compare) == 2:
-    df_compare = df[df["MC"].isin(mcs_compare)]
+if len(mc_compare) == 2:
+    compare_data = df[df["MC"].isin(mc_compare)]
 
-    result_cols = ["VT (4)", "VC (3)", "SM (2)", "2ªF (1)"]
+    # colunas esperadas para comparação
+    compare_cols = [
+        "VT (4)",
+        "VC (3)",
+        "SM (2)",
+        "2x0 (1)",
+        "2x0"
+    ]
+
+    # usa apenas as colunas que realmente existem na planilha
+    valid_compare_cols = [c for c in compare_cols if c in compare_data.columns]
+
+    compare_long = compare_data.melt(
+        id_vars="MC",
+        value_vars=valid_compare_cols,
+        var_name="Resultado",
+        value_name="Quantidade"
+    )
+
+    # traduz os nomes técnicos para leitura humana
+    compare_long["Resultado"] = compare_long["Resultado"].map(result_map)
+
+    # ordem fixa para leitura correta
+    ordem_resultados = [
+        "Vitórias",
+        "Vices",
+        "Semifinais",
+        "Vitórias 2x0"
+    ]
 
     fig_compare = px.bar(
-        df_compare,
-        x="MC",
-        y=result_cols,
+        compare_long,
+        x="Resultado",
+        y="Quantidade",
+        color="MC",
         barmode="group",
-        title="Comparação de Resultados",
-        color_discrete_sequence=["#1DB954", "#A3E635"]
+        text="Quantidade",
+        category_orders={"Resultado": ordem_resultados},
+        title="Comparação de Desempenho entre MCs",
+        color_discrete_sequence=["#1DB954", "#7A1FA2"]  # verde + roxo LV
+    )
+
+    # ajustes visuais para melhorar leitura
+    fig_compare.update_layout(
+        bargap=0.35,
+        bargroupgap=0.15,
+        legend_title_text="MC",
+        yaxis_title="Quantidade",
+        xaxis_title="Resultado"
+    )
+
+    fig_compare.update_traces(
+        textposition="outside"
     )
 
     st.plotly_chart(fig_compare, use_container_width=True)
+
 else:
     st.info("Selecione exatamente dois MCs para visualizar a comparação.")
+
 # ─────────────────────────────────────────────
 # Rodapé · Sobre o Larga o Verbo
 # ─────────────────────────────────────────────
@@ -239,6 +285,7 @@ components.html(
     """,
     height=130
 )
+
 
 
 
