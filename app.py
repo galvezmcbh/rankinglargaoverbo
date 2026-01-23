@@ -187,7 +187,9 @@ components.html(
     """
     <div style="
         display:flex;
-        gap:20px;
+        justify-content:center;
+        align-items:center;
+        gap:24px;
         margin-top:30px;
         flex-wrap:wrap;
     ">
@@ -197,10 +199,10 @@ components.html(
                 background-color:#1DB954;
                 color:white;
                 border:none;
-                padding:18px 28px;
+                padding:18px 32px;
                 font-size:18px;
                 font-weight:bold;
-                border-radius:12px;
+                border-radius:14px;
                 cursor:pointer;
             ">
                 📲 Instagram · Larga o Verbo
@@ -212,10 +214,10 @@ components.html(
                 background-color:#FF0000;
                 color:white;
                 border:none;
-                padding:18px 28px;
+                padding:18px 32px;
                 font-size:18px;
                 font-weight:bold;
-                border-radius:12px;
+                border-radius:14px;
                 cursor:pointer;
             ">
                 ▶️ YouTube · Larga o Verbo
@@ -224,8 +226,10 @@ components.html(
 
     </div>
     """,
-    height=120
+    height=130
 )
+
+
 
 
 
