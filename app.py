@@ -23,6 +23,7 @@ st.markdown(
         background-color:#0f0f0f;
         color:#eaeaea;
     }
+
     span[data-testid="stMultiSelectTag"] {
         background-color:#7A1FA2 !important;
         color:white !important;
@@ -60,15 +61,9 @@ ano_selecionado = st.selectbox(
     sorted(arquivos_anos.keys())
 )
 
-arquivo_atual = arquivos_anos[ano_selecionado]
-
-# ─────────────────────────────────────────────
-# CARREGAMENTO DOS DADOS
-# ─────────────────────────────────────────────
-df = pd.read_excel(arquivo_atual)
+df = pd.read_excel(arquivos_anos[ano_selecionado])
 df.columns = df.columns.str.strip()
 df.fillna(0, inplace=True)
-df["Ano"] = int(ano_selecionado)
 
 # histórico completo
 dfs = []
@@ -95,7 +90,20 @@ result_map = {
 ordem_resultados = list(result_map.values())
 
 # ─────────────────────────────────────────────
-# RANKING
+# MÉTRICAS DO TOPO (5 COLUNAS)
+# ─────────────────────────────────────────────
+col1, col2, col3, col4, col5 = st.columns(5)
+
+col1.metric("MCs no Ranking", len(df))
+col2.metric("Líder Atual", df.iloc[0]["MC"])
+col3.metric("Mais Vitórias", df.loc[df["VT (4)"].idxmax()]["MC"])
+col4.metric("Mais Vices", df.loc[df["VC (3)"].idxmax()]["MC"])
+col5.metric("Mais 2x0", df.loc[df["2x0 (1)"].idxmax()]["MC"])
+
+st.divider()
+
+# ─────────────────────────────────────────────
+# RANKING GERAL
 # ─────────────────────────────────────────────
 st.subheader("🏆 Ranking Geral")
 
@@ -121,18 +129,18 @@ mc_selected = st.selectbox(
     sorted(df["MC"].unique())
 )
 
-mc_data = df[df["MC"] == mc_selected].iloc[0]
+mc_row = df[df["MC"] == mc_selected].iloc[0]
 
 col1, col2 = st.columns(2)
 
-# ── Gráfico
+# ── Gráfico de indicadores
 with col1:
     valid_cols = [c for c in result_map if c in df.columns]
 
     fig_mc = px.bar(
         pd.DataFrame({
             "Resultado": [result_map[c] for c in valid_cols],
-            "Quantidade": [mc_data[c] for c in valid_cols]
+            "Quantidade": [mc_row[c] for c in valid_cols]
         }),
         x="Resultado",
         y="Quantidade",
@@ -142,13 +150,12 @@ with col1:
 
     st.plotly_chart(fig_mc, use_container_width=True)
 
-# ── Card de trajetória
+# ── Card de trajetória (corrigido)
 with col2:
-    texto = ""
-    if "Pontos contabilizados" in df.columns:
-        texto = str(mc_data["Pontos contabilizados"]).lower()
+    texto = str(mc_row.get("Pontos contabilizados", "")).lower()
 
-    edicoes = sorted(set(map(int, re.findall(r"\b\d{1,3}\b", texto))))
+    numeros = [int(n) for n in re.findall(r"\b\d{1,3}\b", texto)]
+    edicoes = sorted(set(n for n in numeros if 1 <= n <= 300))
 
     total_edicoes = len(edicoes)
     primeira = min(edicoes) if edicoes else "—"
@@ -176,33 +183,33 @@ with col2:
         ">
             <h3 style="color:#6A0DAD">{perfil}</h3>
             <p><strong>🎤 Edições:</strong> {total_edicoes}</p>
-            <p><strong>📍 Primeira:</strong> {primeira}</p>
-            <p><strong>📍 Última:</strong> {ultima}</p>
-            <p><strong>⏱️ Intervalo:</strong> {intervalo}</p>
+            <p><strong>📍 Primeira edição:</strong> {primeira}</p>
+            <p><strong>📍 Última edição:</strong> {ultima}</p>
+            <p><strong>⏱️ Intervalo:</strong> {intervalo} edições</p>
         </div>
         """,
         unsafe_allow_html=True
     )
 
 # ─────────────────────────────────────────────
-# 📈 EVOLUÇÃO HISTÓRICA
+# 📊 EVOLUÇÃO HISTÓRICA (GRÁFICO MELHOR)
 # ─────────────────────────────────────────────
-st.subheader("📈 Evolução Histórica do MC")
+st.subheader("📊 Evolução Histórica do MC")
 
 hist_mc = df_historico[df_historico["MC"] == mc_selected]
 
-fig_hist = px.line(
+fig_hist = px.bar(
     hist_mc,
     x="Ano",
     y="PTS",
-    markers=True,
+    text="PTS",
     color_discrete_sequence=["#1DB954"]
 )
 
 st.plotly_chart(fig_hist, use_container_width=True)
 
 # ─────────────────────────────────────────────
-# ⚔️ COMPARAÇÃO
+# ⚔️ COMPARAÇÃO ENTRE MCs
 # ─────────────────────────────────────────────
 st.subheader("⚔️ Comparação entre MCs")
 
@@ -235,3 +242,42 @@ if len(mc_compare) == 2:
     )
 
     st.plotly_chart(fig_compare, use_container_width=True)
+
+# ─────────────────────────────────────────────
+# RODAPÉ · SOBRE O LARGA O VERBO
+# ─────────────────────────────────────────────
+st.markdown("---")
+
+st.markdown(
+    """
+    > *Mais do que rima, o Larga o Verbo é espaço de voz, troca e construção cultural.*
+    """
+)
+
+st.markdown(
+    """
+    O **Larga o Verbo** nasce como batalha de MCs e se consolida como um espaço de 
+    formação, expressão e fortalecimento da cultura periférica, conectando arte, 
+    juventude e território.
+    """
+)
+
+components.html(
+    """
+    <div style="display:flex;justify-content:center;gap:24px;margin-top:30px;">
+        <a href="https://www.instagram.com/largaoverbo" target="_blank">
+            <button style="background:#1DB954;color:white;padding:18px 32px;
+            border:none;border-radius:14px;font-size:18px;font-weight:bold;">
+            📲 Instagram · Larga o Verbo
+            </button>
+        </a>
+        <a href="https://www.youtube.com/@largaoverbolv" target="_blank">
+            <button style="background:#7A1FA2;color:white;padding:18px 32px;
+            border:none;border-radius:14px;font-size:18px;font-weight:bold;">
+            ▶️ YouTube · Larga o Verbo
+            </button>
+        </a>
+    </div>
+    """,
+    height=140
+)
