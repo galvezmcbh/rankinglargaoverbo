@@ -170,7 +170,6 @@ st.markdown(
     originalmente como uma batalha de MCs. Ao longo de nossa trajetória, 
     percebemos que o LV vai além do elemento da rima, tornando-se um espaço de 
     fortalecimento e valorização das expressões culturais periféricas e marginais.
-
     Nosso foco é fomentar iniciativas que dialoguem diretamente com a juventude local, 
     promovendo ações que englobem tanto os elementos da cultura Hip Hop quanto 
     outras manifestações culturais relevantes.
@@ -185,6 +184,7 @@ st.link_button(
     "📲 Acompanhe o Larga o Verbo no Instagram",
     "https://www.instagram.com/largaoverbo"
 )
+
 
 
 
