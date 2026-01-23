@@ -2,7 +2,43 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import streamlit.components.v1 as components
+import os
 import re
+
+# ─────────────────────────────────────────────
+# 🔍 Detecção automática de planilhas por ano
+# ─────────────────────────────────────────────
+
+arquivos_disponiveis = [
+    f for f in os.listdir(".")
+    if f.lower().endswith(".xlsx")
+]
+
+# tenta extrair ano do nome do arquivo (ex: 2024, 2025, 2026)
+arquivos_anos = {}
+
+for arquivo in arquivos_disponiveis:
+    match = re.search(r"(20\d{2})", arquivo)
+    if match:
+        ano = match.group(1)
+        arquivos_anos[ano] = arquivo
+
+# Debug visual (não quebra o app)
+st.sidebar.markdown("### 📂 Planilhas detectadas")
+if arquivos_anos:
+    for ano, arq in sorted(arquivos_anos.items()):
+        st.sidebar.write(f"📊 {ano}: {arq}")
+else:
+    st.sidebar.error("Nenhuma planilha .xlsx com ano no nome foi encontrada.")
+    st.stop()
+st.sidebar.markdown("### 📅 Ano do Ranking")
+
+ano_selecionado = st.sidebar.selectbox(
+    "Selecione o ano",
+    sorted(arquivos_anos.keys())
+)
+
+arquivo_atual = arquivos_anos[ano_selecionado]
 
 # ─────────────────────────────────────────────
 # CONFIGURAÇÕES GERAIS
@@ -85,7 +121,7 @@ ano_selecionado = st.selectbox(
 # ─────────────────────────────────────────────
 # CARREGAMENTO DOS DADOS
 # ─────────────────────────────────────────────
-df = pd.read_excel(arquivos_anos[ano_selecionado])
+df = pd.read_excel(arquivo_atual)
 df["Ano"] = int(ano_selecionado)
 df.fillna(0, inplace=True)
 
@@ -290,3 +326,4 @@ components.html(
     """,
     height=140
 )
+
