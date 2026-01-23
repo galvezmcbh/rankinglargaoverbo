@@ -216,7 +216,7 @@ with col2:
                 </p>
             </div>
 
-            <div style="flex:1; color:white;">
+         <div style="flex:1; color:white;">
                 <p><strong>🎤 Edições:</strong> {total_edicoes}</p>
                 <p><strong>🏆 Vitórias:</strong> {vitorias}</p>
                 <p><strong>🥈 Semifinais:</strong> {semifinais}</p>
@@ -389,6 +389,7 @@ components.html(
     """,
     height=130
 )
+
 
 
 
