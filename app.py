@@ -152,7 +152,17 @@ else:
 
 st.markdown("---")
 
-st.subheader("💚 Sobre o Larga o Verbo")
+st.markdown(
+    """
+    <h3>
+        💚 Sobre o 
+        <a href="https://www.instagram.com/largaoverbo" target="_blank" style="text-decoration:none; color:#1DB954;">
+            Larga o Verbo
+        </a>
+    </h3>
+    """,
+    unsafe_allow_html=True
+)
 
 st.markdown(
     """
@@ -171,6 +181,10 @@ st.markdown(
     "> *Mais do que rima, o Larga o Verbo é espaço de voz, troca e construção cultural.*"
 )
 
+st.link_button(
+    "📲 Acompanhe o Larga o Verbo no Instagram",
+    "https://www.instagram.com/largaoverbo"
+)
 
 
 
