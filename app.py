@@ -4,6 +4,35 @@ import plotly.express as px
 import streamlit.components.v1 as components
 import os
 import re
+def card_lv(titulo, valor, cor):
+    st.markdown(
+        f"""
+        <div style="
+            background-color:#1a1a1a;
+            border-left:6px solid {cor};
+            padding:16px 18px;
+            border-radius:12px;
+            height:100%;
+        ">
+            <p style="
+                margin:0;
+                font-size:14px;
+                color:#bdbdbd;
+                font-weight:600;
+            ">
+                {titulo}
+            </p>
+            <h2 style="
+                margin:4px 0 0 0;
+                color:white;
+                font-size:28px;
+            ">
+                {valor}
+            </h2>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 # ─────────────────────────────────────────────
 # CONFIGURAÇÕES GERAIS
@@ -332,6 +361,7 @@ components.html(
     """,
     height=140
 )
+
 
 
 
