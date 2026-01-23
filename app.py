@@ -6,41 +6,6 @@ import os
 import re
 
 # ─────────────────────────────────────────────
-# 🔍 Detecção automática de planilhas por ano
-# ─────────────────────────────────────────────
-
-arquivos_disponiveis = [
-    f for f in os.listdir(".")
-    if f.lower().endswith(".xlsx")
-]
-
-# tenta extrair ano do nome do arquivo (ex: 2024, 2025, 2026)
-arquivos_anos = {}
-
-for arquivo in arquivos_disponiveis:
-    match = re.search(r"(20\d{2})", arquivo)
-    if match:
-        ano = match.group(1)
-        arquivos_anos[ano] = arquivo
-
-# Debug visual (não quebra o app)
-st.sidebar.markdown("### 📂 Planilhas detectadas")
-if arquivos_anos:
-    for ano, arq in sorted(arquivos_anos.items()):
-        st.sidebar.write(f"📊 {ano}: {arq}")
-else:
-    st.sidebar.error("Nenhuma planilha .xlsx com ano no nome foi encontrada.")
-    st.stop()
-st.sidebar.markdown("### 📅 Ano do Ranking")
-
-ano_selecionado = st.sidebar.selectbox(
-    "Selecione o ano",
-    sorted(arquivos_anos.keys())
-)
-
-arquivo_atual = arquivos_anos[ano_selecionado]
-
-# ─────────────────────────────────────────────
 # CONFIGURAÇÕES GERAIS
 # ─────────────────────────────────────────────
 st.set_page_config(
@@ -49,30 +14,20 @@ st.set_page_config(
 )
 
 # ─────────────────────────────────────────────
-# ESTILO GLOBAL (verde + roxo LV)
+# ESTILO GLOBAL
 # ─────────────────────────────────────────────
 st.markdown(
     """
     <style>
     body {
-        background-color: #0f0f0f;
-        color: #eaeaea;
+        background-color:#0f0f0f;
+        color:#eaeaea;
     }
-
-    /* Chip do multiselect */
     span[data-testid="stMultiSelectTag"] {
-        background-color: #7A1FA2 !important;
-        color: white !important;
-        border-radius: 12px !important;
-        font-weight: 600 !important;
-    }
-
-    span[data-testid="stMultiSelectTag"] span {
-        color: white !important;
-    }
-
-    span[data-testid="stMultiSelectTag"] svg {
-        fill: white !important;
+        background-color:#7A1FA2 !important;
+        color:white !important;
+        border-radius:12px;
+        font-weight:600;
     }
     </style>
     """,
@@ -80,7 +35,54 @@ st.markdown(
 )
 
 # ─────────────────────────────────────────────
-# MAPEAMENTO DOS INDICADORES
+# 🔍 DETECÇÃO AUTOMÁTICA DE PLANILHAS
+# ─────────────────────────────────────────────
+arquivos_anos = {}
+
+for arq in os.listdir("."):
+    if arq.lower().endswith(".xlsx"):
+        match = re.search(r"(20\d{2})", arq)
+        if match:
+            arquivos_anos[match.group(1)] = arq
+
+if not arquivos_anos:
+    st.error("Nenhuma planilha .xlsx com ano no nome foi encontrada.")
+    st.stop()
+
+# ─────────────────────────────────────────────
+# TOPO
+# ─────────────────────────────────────────────
+st.title("💚 Ranking Larga o Verbo")
+st.caption("Memória, performance e evolução histórica dos MCs")
+
+ano_selecionado = st.selectbox(
+    "📅 Selecione o ano do ranking",
+    sorted(arquivos_anos.keys())
+)
+
+arquivo_atual = arquivos_anos[ano_selecionado]
+
+# ─────────────────────────────────────────────
+# CARREGAMENTO DOS DADOS
+# ─────────────────────────────────────────────
+df = pd.read_excel(arquivo_atual)
+df.columns = df.columns.str.strip()
+df.fillna(0, inplace=True)
+df["Ano"] = int(ano_selecionado)
+
+# histórico completo
+dfs = []
+for ano, arq in arquivos_anos.items():
+    temp = pd.read_excel(arq)
+    temp.columns = temp.columns.str.strip()
+    temp.fillna(0, inplace=True)
+    temp["Ano"] = int(ano)
+    dfs.append(temp)
+
+df_historico = pd.concat(dfs, ignore_index=True)
+
+# ─────────────────────────────────────────────
+# MAPEAMENTO DE INDICADORES
 # ─────────────────────────────────────────────
 result_map = {
     "VT (4)": "Vitórias",
@@ -90,79 +92,10 @@ result_map = {
     "2x0": "Vitórias 2x0"
 }
 
-ordem_resultados = [
-    "Vitórias",
-    "Vices",
-    "Semifinais",
-    "Vitórias 2x0"
-]
+ordem_resultados = list(result_map.values())
 
 # ─────────────────────────────────────────────
-# MAPA DE ANOS → PLANILHAS
-# ─────────────────────────────────────────────
-arquivos_anos = {
-    "2024": "RANKING_LARGA_O_VERBO_2024.xlsx",
-    "2025": "RANKING_LARGA_O_VERBO_2025.xlsx",
-    # "2026": "RANKING_LARGA_O_VERBO_2026.xlsx"
-}
-
-# ─────────────────────────────────────────────
-# TOPO · FILTRO DE ANO
-# ─────────────────────────────────────────────
-st.title("💚 Ranking Larga o Verbo")
-st.caption("Memória, performance e evolução histórica dos MCs")
-
-ano_selecionado = st.selectbox(
-    "📅 Selecione o ano do ranking",
-    list(arquivos_anos.keys()),
-    index=len(arquivos_anos) - 1
-)
-
-# ─────────────────────────────────────────────
-# CARREGAMENTO DOS DADOS
-# ─────────────────────────────────────────────
-df = pd.read_excel(arquivo_atual)
-# ─────────────────────────────────────────────
-# Normalização de colunas (anti-KeyError)
-# ─────────────────────────────────────────────
-
-df.columns = df.columns.str.strip()
-
-aliases = {
-    "VICE (2)": "VC (3)",
-    "SEMIS (1)": "SM (2)",
-    "2x0": "2x0 (1)"
-}
-
-df.rename(columns=aliases, inplace=True)
-
-df["Ano"] = int(ano_selecionado)
-df.fillna(0, inplace=True)
-
-# histórico completo
-dfs_historicos = []
-for ano, arquivo in arquivos_anos.items():
-    temp = pd.read_excel(arquivo)
-    temp["Ano"] = int(ano)
-    temp.fillna(0, inplace=True)
-    dfs_historicos.append(temp)
-
-df_historico = pd.concat(dfs_historicos, ignore_index=True)
-
-# ─────────────────────────────────────────────
-# MÉTRICAS GERAIS
-# ─────────────────────────────────────────────
-col1, col2, col3, col4 = st.columns(4)
-
-col1.metric("MCs no Ranking", len(df))
-col2.metric("Líder do Ano", df.iloc[0]["MC"])
-col3.metric("Mais Vitórias", df.loc[df["VT (4)"].idxmax()]["MC"])
-col4.metric("Mais 2x0", df.loc[df["2x0 (1)"].idxmax()]["MC"])
-
-st.divider()
-
-# ─────────────────────────────────────────────
-# RANKING GERAL
+# RANKING
 # ─────────────────────────────────────────────
 st.subheader("🏆 Ranking Geral")
 
@@ -172,7 +105,6 @@ fig_rank = px.bar(
     y="MC",
     orientation="h",
     text="PTS",
-    height=600,
     color_discrete_sequence=["#1DB954"]
 )
 
@@ -189,89 +121,71 @@ mc_selected = st.selectbox(
     sorted(df["MC"].unique())
 )
 
-mc_data = df[df["MC"] == mc_selected]
+mc_data = df[df["MC"] == mc_selected].iloc[0]
 
 col1, col2 = st.columns(2)
 
-# ── Gráfico de indicadores
+# ── Gráfico
 with col1:
-    valid_cols = [c for c in result_map if c in mc_data.columns]
+    valid_cols = [c for c in result_map if c in df.columns]
 
     fig_mc = px.bar(
-        mc_data.melt(id_vars="MC", value_vars=valid_cols),
-        x="variable",
-        y="value",
-        text="value",
+        pd.DataFrame({
+            "Resultado": [result_map[c] for c in valid_cols],
+            "Quantidade": [mc_data[c] for c in valid_cols]
+        }),
+        x="Resultado",
+        y="Quantidade",
+        text="Quantidade",
         color_discrete_sequence=["#7A1FA2"]
-    )
-
-    fig_mc.update_xaxes(
-        tickvals=valid_cols,
-        ticktext=[result_map[c] for c in valid_cols]
     )
 
     st.plotly_chart(fig_mc, use_container_width=True)
 
-# ── Card de trajetória (edições)
+# ── Card de trajetória
 with col2:
-   if "Pontos contabilizados" in mc_data.columns:
-    texto = " ".join(
-        mc_data["Pontos contabilizados"]
-        .dropna()
-        .astype(str)
-        .tolist()
-    )
-   else:
     texto = ""
+    if "Pontos contabilizados" in df.columns:
+        texto = str(mc_data["Pontos contabilizados"]).lower()
 
+    edicoes = sorted(set(map(int, re.findall(r"\b\d{1,3}\b", texto))))
 
-    # 🔎 Captura números de edições (números soltos no texto)
+    total_edicoes = len(edicoes)
+    primeira = min(edicoes) if edicoes else "—"
+    ultima = max(edicoes) if edicoes else "—"
+    intervalo = (ultima - primeira) if edicoes else 0
 
-edicoes_raw = re.findall(r"\b\d{1,3}\b", texto_lower)
-edicoes = sorted(set(int(e) for e in edicoes_raw))
-
-total_edicoes = len(edicoes)
-primeira_edicao = min(edicoes) if edicoes else None
-ultima_edicao = max(edicoes) if edicoes else None
-intervalo = (ultima_edicao - primeira_edicao) if edicoes else 0
-
-# 🏷️ Classificação do MC
-if total_edicoes == 0:
-    perfil_mc = "Sem histórico registrado"
-elif total_edicoes <= 2:
-    perfil_mc = "MC iniciante"
-elif total_edicoes >= 8 and intervalo >= 15:
-    perfil_mc = "MC veterano"
-elif total_edicoes >= 5 and intervalo <= 6:
-    perfil_mc = "MC constante"
-else:
-    perfil_mc = "MC em ascensão"
-
+    if total_edicoes == 0:
+        perfil = "Sem histórico"
+    elif total_edicoes <= 2:
+        perfil = "MC iniciante"
+    elif total_edicoes >= 8 and intervalo >= 15:
+        perfil = "MC veterano"
+    elif total_edicoes >= 5:
+        perfil = "MC constante"
+    else:
+        perfil = "MC em ascensão"
 
     st.markdown(
         f"""
         <div style="
-            display:flex;
-            gap:24px;
             padding:24px;
             border-radius:18px;
             background:linear-gradient(135deg,#1DB95422,#6A0DAD22);
             border:2px solid #6A0DAD55;
         ">
-            <div>
-                <h3 style="color:#6A0DAD">{perfil}</h3>
-                <p><strong>🎤 Edições:</strong> {total_edicoes}</p>
-                <p><strong>📍 Primeira:</strong> {primeira}</p>
-                <p><strong>📍 Última:</strong> {ultima}</p>
-                <p><strong>⏱️ Intervalo:</strong> {intervalo}</p>
-            </div>
+            <h3 style="color:#6A0DAD">{perfil}</h3>
+            <p><strong>🎤 Edições:</strong> {total_edicoes}</p>
+            <p><strong>📍 Primeira:</strong> {primeira}</p>
+            <p><strong>📍 Última:</strong> {ultima}</p>
+            <p><strong>⏱️ Intervalo:</strong> {intervalo}</p>
         </div>
         """,
         unsafe_allow_html=True
     )
 
 # ─────────────────────────────────────────────
-# 📈 EVOLUÇÃO HISTÓRICA DO MC
+# 📈 EVOLUÇÃO HISTÓRICA
 # ─────────────────────────────────────────────
 st.subheader("📈 Evolução Histórica do MC")
 
@@ -285,15 +199,10 @@ fig_hist = px.line(
     color_discrete_sequence=["#1DB954"]
 )
 
-fig_hist.update_layout(
-    yaxis_title="Pontuação",
-    xaxis_title="Ano"
-)
-
 st.plotly_chart(fig_hist, use_container_width=True)
 
 # ─────────────────────────────────────────────
-# ⚔️ COMPARAÇÃO ENTRE MCs
+# ⚔️ COMPARAÇÃO
 # ─────────────────────────────────────────────
 st.subheader("⚔️ Comparação entre MCs")
 
@@ -304,11 +213,10 @@ mc_compare = st.multiselect(
 )
 
 if len(mc_compare) == 2:
-    compare = df[df["MC"].isin(mc_compare)]
+    comp = df[df["MC"].isin(mc_compare)]
+    cols = [c for c in result_map if c in df.columns]
 
-    cols = [c for c in result_map if c in compare.columns]
-
-    long = compare.melt(
+    long = comp.melt(
         id_vars="MC",
         value_vars=cols,
         var_name="Resultado",
@@ -316,7 +224,6 @@ if len(mc_compare) == 2:
     )
 
     long["Resultado"] = long["Resultado"].map(result_map)
-    long["Resultado"] = pd.Categorical(long["Resultado"], ordem_resultados, True)
 
     fig_compare = px.bar(
         long,
@@ -327,38 +234,4 @@ if len(mc_compare) == 2:
         color_discrete_sequence=["#1DB954", "#7A1FA2"]
     )
 
-    fig_compare.update_layout(bargap=0.35)
     st.plotly_chart(fig_compare, use_container_width=True)
-
-# ─────────────────────────────────────────────
-# RODAPÉ
-# ─────────────────────────────────────────────
-st.markdown("---")
-
-components.html(
-    """
-    <div style="display:flex;justify-content:center;gap:24px;margin-top:30px;">
-        <a href="https://www.instagram.com/largaoverbo" target="_blank">
-            <button style="background:#1DB954;color:white;padding:18px 32px;
-            border:none;border-radius:14px;font-size:18px;font-weight:bold;">
-            📲 Instagram · Larga o Verbo
-            </button>
-        </a>
-        <a href="https://www.youtube.com/@largaoverbolv" target="_blank">
-            <button style="background:#7A1FA2;color:white;padding:18px 32px;
-            border:none;border-radius:14px;font-size:18px;font-weight:bold;">
-            ▶️ YouTube · Larga o Verbo
-            </button>
-        </a>
-    </div>
-    """,
-    height=140
-)
-
-
-
-
-
-
-
-
