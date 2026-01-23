@@ -94,11 +94,16 @@ ordem_resultados = list(result_map.values())
 # ─────────────────────────────────────────────
 col1, col2, col3, col4, col5 = st.columns(5)
 
-col1.metric("MCs no Ranking", len(df))
-col2.metric("Líder Atual", df.iloc[0]["MC"])
-col3.metric("Mais Vitórias", df.loc[df["VT (4)"].idxmax()]["MC"])
-col4.metric("Mais Vices", df.loc[df["VC (3)"].idxmax()]["MC"])
-col5.metric("Mais 2x0", df.loc[df["2x0 (1)"].idxmax()]["MC"])
+with col1:
+    card_lv("MCs no Ranking", total_mcs, "#2ecc71")
+with col2:
+    card_lv("Líder Atual", lider, "#8e44ad")
+with col3:
+    card_lv("Mais Vitórias", top_vitorias, "#2ecc71")
+with col4:
+    card_lv("Mais 2x0", top_20, "#8e44ad")
+with col5:
+    card_lv("Edições no Ano", total_edicoes_ano, "#2ecc71")
 
 st.divider()
 
@@ -132,6 +137,33 @@ mc_selected = st.selectbox(
 mc_row = df[df["MC"] == mc_selected].iloc[0]
 
 col1, col2 = st.columns(2)
+import re
+
+texto = str(linha_mc["Pontos contabilizados"])
+texto_lower = texto.lower()
+
+# captura QUALQUER número solto (edições)
+edicoes_raw = re.findall(r"\b\d{1,3}\b", texto_lower)
+edicoes = sorted(set(int(e) for e in edicoes_raw))
+
+total_edicoes = len(edicoes)
+primeira_edicao = min(edicoes) if edicoes else None
+ultima_edicao = max(edicoes) if edicoes else None
+intervalo = (ultima_edicao - primeira_edicao) if total_edicoes >= 2 else 0
+
+# métricas semânticas
+vitorias = texto_lower.count("vitória")
+vices = texto_lower.count("vice")
+semifinais = texto_lower.count("semifinal")
+especiais = texto_lower.count("especial")
+if total_edicoes >= 8 and intervalo >= 15:
+    perfil_mc = "Veterano"
+elif total_edicoes >= 6:
+    perfil_mc = "Constante"
+elif total_edicoes >= 3:
+    perfil_mc = "Em ascensão"
+else:
+    perfil_mc = "Participação pontual"
 
 # ── Gráfico de indicadores
 with col1:
@@ -281,3 +313,4 @@ components.html(
     """,
     height=140
 )
+
