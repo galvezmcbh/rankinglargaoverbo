@@ -343,19 +343,19 @@ if len(mc_compare) == 2:
 # ─────────────────────────────────────────────
 st.markdown("---")
 
+
+st.markdown("""
+## 💚 Largo Verbo
+
+O Larga o Verbo é um movimento cultural que teve início em agosto de 2022, originalmente como uma batalha de MCs.  
+Ao longo de nossa trajetória, percebemos que o LV vai além do elemento da rima, tornando-se um espaço de fortalecimento e valorização das expressões culturais periféricas e marginais.
+
+Nosso foco é fomentar iniciativas que dialoguem diretamente com a juventude local, promovendo ações que englobem tanto os elementos da cultura Hip Hop quanto outras manifestações culturais relevantes.
+""")
 st.markdown(
     """
     > *Mais do que rima, o Larga o Verbo é espaço de voz, troca e construção cultural.*
     """
-)
-
-st.markdown(
-    """
-    O **Larga o Verbo** nasce como batalha de MCs e se consolida como um espaço de 
-    formação, expressão e fortalecimento da cultura periférica, conectando arte, 
-    juventude e território.
-    """
-)
 
 components.html(
     """
@@ -376,6 +376,7 @@ components.html(
     """,
     height=140
 )
+
 
 
 
