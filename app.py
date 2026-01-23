@@ -227,6 +227,7 @@ with col2:
 
     # 🔎 Captura números de edições (números soltos no texto)
 # 🔎 Captura números de edições (números soltos no texto)
+# 🔎 Captura números de edições
 edicoes_raw = re.findall(r"\b\d{1,3}\b", texto_lower)
 edicoes = sorted(set(int(e) for e in edicoes_raw))
 
@@ -235,14 +236,18 @@ primeira_edicao = min(edicoes) if edicoes else None
 ultima_edicao = max(edicoes) if edicoes else None
 intervalo = (ultima_edicao - primeira_edicao) if edicoes else 0
 
-    if total_edicoes >= 8 and intervalo >= 15:
-        perfil = "🎖️ MC Veterano"
-    elif total_edicoes >= 6:
-        perfil = "🔥 MC Constante"
-    elif total_edicoes <= 4:
-        perfil = "🌱 MC em Ascensão"
-    else:
-        perfil = "🌒 Participação Pontual"
+# 🏷️ Classificação do MC
+if total_edicoes == 0:
+    perfil_mc = "Sem histórico registrado"
+elif total_edicoes <= 2:
+    perfil_mc = "MC iniciante"
+elif total_edicoes >= 8 and intervalo >= 15:
+    perfil_mc = "MC veterano"
+elif total_edicoes >= 5 and intervalo <= 6:
+    perfil_mc = "MC constante"
+else:
+    perfil_mc = "MC em ascensão"
+
 
     st.markdown(
         f"""
@@ -350,6 +355,7 @@ components.html(
     """,
     height=140
 )
+
 
 
 
