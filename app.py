@@ -209,7 +209,7 @@ with col2:
             margin-top:16px;
         ">
 
-            <div style="flex:1;">
+        <div style="flex:1;">
                 <h3 style="margin:0; color:#6A0DAD;">{perfil}</h3>
                 <p style="margin:6px 0 0 0; color:#1DB954; font-weight:600;">
                     {descricao}
@@ -389,6 +389,7 @@ components.html(
     """,
     height=130
 )
+
 
 
 
