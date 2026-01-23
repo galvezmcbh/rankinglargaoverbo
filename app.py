@@ -156,7 +156,8 @@ st.markdown(
     """
     <h3>
         💚 Sobre o 
-        <a href="https://www.instagram.com/largaoverbo" target="_blank" style="text-decoration:none; color:#1DB954;">
+        <a href="https://www.instagram.com/largaoverbo" target="_blank" 
+           style="text-decoration:none; color:#1DB954;">
             Larga o Verbo
         </a>
     </h3>
@@ -170,6 +171,7 @@ st.markdown(
     originalmente como uma batalha de MCs. Ao longo de nossa trajetória, 
     percebemos que o LV vai além do elemento da rima, tornando-se um espaço de 
     fortalecimento e valorização das expressões culturais periféricas e marginais.
+
     Nosso foco é fomentar iniciativas que dialoguem diretamente com a juventude local, 
     promovendo ações que englobem tanto os elementos da cultura Hip Hop quanto 
     outras manifestações culturais relevantes.
@@ -180,10 +182,43 @@ st.markdown(
     "> *Mais do que rima, o Larga o Verbo é espaço de voz, troca e construção cultural.*"
 )
 
-st.link_button(
-    "📲 Acompanhe o Larga o Verbo no Instagram",
-    "https://www.instagram.com/largaoverbo"
+st.markdown(
+    """
+    <div style="display:flex; gap:20px; margin-top:30px; flex-wrap:wrap;">
+        <a href="https://www.instagram.com/largaoverbo" target="_blank">
+            <button style="
+                background-color:#1DB954;
+                color:white;
+                border:none;
+                padding:18px 28px;
+                font-size:18px;
+                font-weight:bold;
+                border-radius:12px;
+                cursor:pointer;
+            ">
+                📲 Instagram · Larga o Verbo
+            </button>
+        </a>
+
+        <a href="https://www.youtube.com/@largaoverbolv" target="_blank">
+            <button style="
+                background-color:#FF0000;
+                color:white;
+                border:none;
+                padding:18px 28px;
+                font-size:18px;
+                font-weight:bold;
+                border-radius:12px;
+                cursor:pointer;
+            ">
+                ▶️ YouTube · Larga o Verbo
+            </button>
+        </a>
+    </div>
+    """,
+    unsafe_allow_html=True
 )
+
 
 
 
