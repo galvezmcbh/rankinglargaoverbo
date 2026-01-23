@@ -353,7 +353,7 @@ Nosso foco é fomentar iniciativas que dialoguem diretamente com a juventude loc
 """)
 st.markdown(
 )
-    """
+"""
     > *Mais do que rima, o Larga o Verbo é espaço de voz, troca e construção cultural.*
     """
 
@@ -376,6 +376,7 @@ components.html(
     """,
     height=140
 )
+
 
 
 
