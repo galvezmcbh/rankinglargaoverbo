@@ -2,6 +2,16 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import streamlit.components.v1 as components
+# ─────────────────────────────────────────────
+# Mapeamento dos indicadores do ranking
+# ─────────────────────────────────────────────
+result_map = {
+    "VT (4)": "Títulos",
+    "VC (3)": "Vices",
+    "SM (2)": "Semifinais",
+    "2x0 (1)": "Vitórias 2x0",
+    "2x0": "Vitórias 2x0"
+}
 st.markdown("""
 <style>
     body {
@@ -91,8 +101,8 @@ mc_selected = st.selectbox(
 
 mc_data = df[df["MC"] == mc_selected]
 
-# garante que só colunas existentes serão usadas
-valid_result_cols = [col for col in result_cols if col in mc_data.columns]
+# detecta automaticamente quais colunas existem
+valid_cols = [col for col in result_map.keys() if col in mc_data.columns]
 
 col1, col2 = st.columns(2)
 
@@ -100,7 +110,7 @@ with col1:
     fig_mc_bar = px.bar(
         mc_data.melt(
             id_vars="MC",
-            value_vars=valid_result_cols
+            value_vars=valid_cols
         ),
         x="variable",
         y="value",
@@ -108,22 +118,21 @@ with col1:
         title=f"Resultados de {mc_selected}",
         color_discrete_sequence=["#1DB954"]
     )
+
+    # troca nomes técnicos por nomes legíveis
+    fig_mc_bar.update_xaxes(
+        ticktext=[result_map[c] for c in valid_cols],
+        tickvals=valid_cols
+    )
+
     st.plotly_chart(fig_mc_bar, use_container_width=True)
 
 with col2:
     st.subheader("📋 Resumo do Desempenho")
     st.table(
-        mc_data[valid_result_cols].rename(columns={
-            "VT (4)": "Títulos",
-            "VC (3)": "Vices",
-            "SM (2)": "Semifinais",
-            "2x0 (1)": "Vitórias 2x0",
-            "2x0": "Vitórias 2x0"
-        })
+        mc_data[valid_cols].rename(columns=result_map)
     )
-
-
-
+    
 st.subheader("⚔️ Comparação entre MCs")
 
 mcs_compare = st.multiselect(
@@ -230,6 +239,7 @@ components.html(
     """,
     height=130
 )
+
 
 
 
