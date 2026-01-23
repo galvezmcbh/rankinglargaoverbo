@@ -226,19 +226,15 @@ with col2:
 # ─────────────────────────────────────────────
 # 📊 EVOLUÇÃO HISTÓRICA (GRÁFICO MELHOR)
 # ─────────────────────────────────────────────
-st.subheader("📊 Evolução Histórica do MC")
+st.subheader("Evolução histórica do MC")
 
-hist_mc = df_historico[df_historico["MC"] == mc_selected]
+df_mc_hist = df_historico[df_historico["MC"] == mc_selecionado]
 
-fig_hist = px.bar(
-    hist_mc,
-    x="Ano",
-    y="PTS",
-    text="PTS",
-    color_discrete_sequence=["#1DB954"]
+st.line_chart(
+    df_mc_hist.set_index("Ano")["Pontuação"],
+    height=300
 )
 
-st.plotly_chart(fig_hist, use_container_width=True)
 
 # ─────────────────────────────────────────────
 # ⚔️ COMPARAÇÃO ENTRE MCs
@@ -313,4 +309,5 @@ components.html(
     """,
     height=140
 )
+
 
