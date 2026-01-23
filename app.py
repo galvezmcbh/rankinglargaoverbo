@@ -150,14 +150,19 @@ col1, col2, col3, col4, col5 = st.columns(5)
 
 with col1:
     card_lv("MCs no Ranking", total_mcs, "#2ecc71")
+
 with col2:
-    card_lv("Líder Atual", lider, "#8e44ad")
+    card_lv("Líder Atual", lider_atual, "#8e44ad")
+
 with col3:
-    card_lv("Mais Vitórias", top_vitorias, "#2ecc71")
+    card_lv("Mais Vitórias", mais_vitorias, "#2ecc71")
+
 with col4:
-    card_lv("Mais 2x0", top_20, "#8e44ad")
+    card_lv("Mais 2x0", mais_2x0, "#8e44ad")
+
 with col5:
-    card_lv("Edições no Ano", total_edicoes_ano, "#2ecc71")
+    card_lv("Edições no Ano", df.shape[0], "#2ecc71")
+
 
 st.divider()
 
@@ -386,6 +391,7 @@ components.html(
     """,
     height=140
 )
+
 
 
 
