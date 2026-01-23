@@ -226,8 +226,7 @@ with col2:
 
 
     # 🔎 Captura números de edições (números soltos no texto)
-# 🔎 Captura números de edições (números soltos no texto)
-# 🔎 Captura números de edições
+
 edicoes_raw = re.findall(r"\b\d{1,3}\b", texto_lower)
 edicoes = sorted(set(int(e) for e in edicoes_raw))
 
@@ -355,6 +354,7 @@ components.html(
     """,
     height=140
 )
+
 
 
 
