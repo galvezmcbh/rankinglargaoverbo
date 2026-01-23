@@ -309,6 +309,16 @@ with col2:
 # 📊 EVOLUÇÃO HISTÓRICA (GRÁFICO MELHOR)
 # ─────────────────────────────────────────────
 st.subheader("Evolução histórica do MC")
+# ─────────────────────────────────────────────
+# SELEÇÃO DO MC (ANÁLISE INDIVIDUAL)
+# ─────────────────────────────────────────────
+
+lista_mcs = sorted(df["MC"].unique())
+
+mc_selecionado = st.selectbox(
+    "🎤 Selecione o MC para análise individual",
+    lista_mcs
+)
 
 df_mc_hist = df_historico[df_historico["MC"] == mc_selecionado]
 
@@ -391,6 +401,7 @@ components.html(
     """,
     height=140
 )
+
 
 
 
