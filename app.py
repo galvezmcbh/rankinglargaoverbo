@@ -5,27 +5,33 @@ import streamlit.components.v1 as components
 st.markdown(
     """
     <style>
-    /* Multiselect - item selecionado */
-    div[data-baseweb="tag"] {
+    /* Chip selecionado no multiselect */
+    span[data-testid="stMultiSelectTag"] {
         background-color: #7A1FA2 !important;
         color: white !important;
-        border-radius: 10px;
-        font-weight: 600;
+        border-radius: 12px !important;
+        font-weight: 600 !important;
     }
 
-    /* Ícone de fechar (x) do item selecionado */
-    div[data-baseweb="tag"] svg {
+    /* Texto interno do chip */
+    span[data-testid="stMultiSelectTag"] span {
+        color: white !important;
+    }
+
+    /* Ícone de remover (x) */
+    span[data-testid="stMultiSelectTag"] svg {
         fill: white !important;
     }
 
-    /* Hover no item */
-    div[data-baseweb="tag"]:hover {
+    /* Hover */
+    span[data-testid="stMultiSelectTag"]:hover {
         background-color: #6A1B9A !important;
     }
     </style>
     """,
     unsafe_allow_html=True
 )
+
 
 # ─────────────────────────────────────────────
 # Mapeamento dos indicadores do ranking
@@ -315,6 +321,7 @@ components.html(
     """,
     height=130
 )
+
 
 
 
