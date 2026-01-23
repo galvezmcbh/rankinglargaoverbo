@@ -173,6 +173,11 @@ if len(mc_compare) == 2:
         "Semifinais",
         "Vitórias 2x0"
     ]
+    compare_long["Resultado"] = pd.Categorical(
+    compare_long["Resultado"],
+    categories=ordem_resultados,
+    ordered=True
+)
 
     fig_compare = px.bar(
         compare_long,
@@ -285,6 +290,7 @@ components.html(
     """,
     height=130
 )
+
 
 
 
