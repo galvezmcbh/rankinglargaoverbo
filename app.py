@@ -146,7 +146,7 @@ ordem_resultados = list(result_map.values())
 # ─────────────────────────────────────────────
 # MÉTRICAS DO TOPO (5 COLUNAS)
 # ─────────────────────────────────────────────
-col1, col2, col3, col4, col5 = st.columns(5)
+col1, col2, col3, col4 = st.columns(4)
 
 with col1:
     card_lv("MCs no Ranking", total_mcs, "#2ecc71")
@@ -160,8 +160,6 @@ with col3:
 with col4:
     card_lv("Mais 2x0", mais_2x0, "#8e44ad")
 
-with col5:
-    card_lv("Edições no Ano", df.shape[0], "#2ecc71")
 
 
 st.divider()
@@ -378,6 +376,7 @@ components.html(
     """,
     height=140
 )
+
 
 
 
