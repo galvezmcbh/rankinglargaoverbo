@@ -93,6 +93,31 @@ ano_selecionado = st.selectbox(
 df = pd.read_excel(arquivos_anos[ano_selecionado])
 df.columns = df.columns.str.strip()
 df.fillna(0, inplace=True)
+# ─────────────────────────────────────────────
+# MÉTRICAS DO TOPO (AGORA DEFINIDAS)
+# ─────────────────────────────────────────────
+
+total_mcs = df["MC"].nunique()
+
+lider_atual = (
+    df.sort_values("PTS", ascending=False)
+    .iloc[0]["MC"]
+)
+
+mais_vitorias = (
+    df.loc[df["VT (4)"].idxmax()]["MC"]
+    if "VT (4)" in df.columns else "—"
+)
+
+mais_vices = (
+    df.loc[df["VC (3)"].idxmax()]["MC"]
+    if "VC (3)" in df.columns else "—"
+)
+
+mais_2x0 = (
+    df.loc[df["2x0 (1)"].idxmax()]["MC"]
+    if "2x0 (1)" in df.columns else "—"
+)
 
 # histórico completo
 dfs = []
@@ -361,6 +386,7 @@ components.html(
     """,
     height=140
 )
+
 
 
 
