@@ -226,14 +226,14 @@ with col2:
 
 
     # 🔎 Captura números de edições (números soltos no texto)
+# 🔎 Captura números de edições (números soltos no texto)
 edicoes_raw = re.findall(r"\b\d{1,3}\b", texto_lower)
 edicoes = sorted(set(int(e) for e in edicoes_raw))
 
-
-    total_edicoes = len(edicoes)
-    primeira = min(edicoes) if edicoes else None
-    ultima = max(edicoes) if edicoes else None
-    intervalo = (ultima - primeira) if edicoes else 0
+total_edicoes = len(edicoes)
+primeira_edicao = min(edicoes) if edicoes else None
+ultima_edicao = max(edicoes) if edicoes else None
+intervalo = (ultima_edicao - primeira_edicao) if edicoes else 0
 
     if total_edicoes >= 8 and intervalo >= 15:
         perfil = "🎖️ MC Veterano"
@@ -350,6 +350,7 @@ components.html(
     """,
     height=140
 )
+
 
 
 
