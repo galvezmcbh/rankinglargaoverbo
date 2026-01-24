@@ -381,7 +381,7 @@ with col2:
         descricao = "Presença que fortalece o coletivo, base do movimento."
         cor_titulo = "#3498db"
         emoji = "📀"
-    elif numero_finais >= 1:
+    elif numero_finais >= 2:
         perfil = "💿 Promessa Concretizada - Sangue de Finalista"
         descricao = "Provou que tem o sangue, chegou onde poucos chegam."
         cor_titulo = "#e74c3c"
@@ -622,6 +622,7 @@ components.html(
     """,
     height=120
 )
+
 
 
 
