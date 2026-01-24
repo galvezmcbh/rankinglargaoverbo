@@ -220,8 +220,7 @@ st.plotly_chart(fig_rank, use_container_width=True)
 st.subheader("🧬 Análise Individual")
 
 col_titulo, col_botao = st.columns([4, 1])
-with col_titulo:
-    st.subheader("🧬 Análise Individual")
+
 with col_botao:
     # Método 1: Tenta switch_page primeiro
     try:
@@ -700,6 +699,7 @@ components.html(
     """,
     height=120
 )
+
 
 
 
