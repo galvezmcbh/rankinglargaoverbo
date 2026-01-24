@@ -468,8 +468,9 @@ with col2:
     </div>
     """
     
-    # 4. EXIBIR O CARD (MÉTODO ALTERNATIVO)
-    st.markdown(html_card, unsafe_allow_html=True)
+        # 4. EXIBIR O CARD - USANDO components.v1.html (GARANTIDO)
+    import streamlit.components.v1 as components
+    components.html(html_card, height=400)
 
 # ─────────────────────────────────────────────
 # ⚔️ COMPARAÇÃO ENTRE MCs
@@ -603,6 +604,7 @@ components.html(
     """,
     height=120
 )
+
 
 
 
