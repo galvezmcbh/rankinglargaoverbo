@@ -397,8 +397,10 @@ with col2:
         cor_titulo = "#f39c12"
         emoji = "🎧"
     
-    # 3. CARD HTML (FORMATAÇÃO VERIFICADA)
-        card_html = f"""
+     # 3. CRIAR E EXIBIR O CARD (VERSÃO CORRIGIDA)
+    import streamlit.components.v1 as components
+    
+    card_html = f"""
     <div style="
         padding:24px;
         border-radius:20px;
@@ -480,9 +482,8 @@ with col2:
     </div>
     """
     
-        # 4. EXIBIR O CARD - USANDO components.v1.html (GARANTIDO)
-    import streamlit.components.v1 as components
-    components.html(html_card, height=400)
+    # 4. EXIBIR O CARD - NOME DA VARIÁVEL CORRIGIDO
+    components.html(card_html, height=420)
 
 # ─────────────────────────────────────────────
 # ⚔️ COMPARAÇÃO ENTRE MCs
@@ -616,6 +617,7 @@ components.html(
     """,
     height=120
 )
+
 
 
 
