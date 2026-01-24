@@ -345,8 +345,18 @@ with col2:
         if tem_participacao:
             break
     
-    # 2. SISTEMA DE CLASSIFICAÇÃO
-    if numero_finais >= 8:
+       # 2. SISTEMA DE CLASSIFICAÇÃO COM LÍDER GARANTIDO COMO LENDA
+    # Verificar se é o LÍDER DO RANKING ATUAL
+    lider_do_ranking = df.sort_values("PTS", ascending=False).iloc[0]["MC"]
+    eh_lider = mc_selected == lider_do_ranking
+    
+    # LÓGICA DE CLASSIFICAÇÃO (LÍDER TEM PRIORIDADE ABSOLUTA)
+    if eh_lider:
+        perfil = "🏆 Dono do Pódio - Lenda Consagrada"
+        descricao = "Líder do ranking! Microfone que dita a lei, referência absoluta do circuito."
+        cor_titulo = "#FFD700"
+        emoji = "🏆"
+    elif numero_finais >= 8:
         perfil = "🏆 Dono do Pódio - Lenda Consagrada"
         descricao = "Microfone que dita a lei, referência absoluta do circuito."
         cor_titulo = "#FFD700"
@@ -604,6 +614,7 @@ components.html(
     """,
     height=120
 )
+
 
 
 
