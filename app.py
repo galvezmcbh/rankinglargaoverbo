@@ -306,42 +306,173 @@ with col1:
     else:
         st.warning("Nenhuma coluna de desempenho encontrada.")
 
-# ── Card de trajetória (corrigido)
+# ── CARD FINAL: Perfil Poético do MC (COM TODAS AS MELHORIAS)
 with col2:
-    texto = str(mc_row.get("Pontos contabilizados", "")).lower()
-
-    numeros = [int(n) for n in re.findall(r"\b\d{1,3}\b", texto)]
-    edicoes = sorted(set(n for n in numeros if 1 <= n <= 300))
-
-    total_edicoes = len(edicoes)
-    primeira = min(edicoes) if edicoes else "—"
-    ultima = max(edicoes) if edicoes else "—"
-    intervalo = (ultima - primeira) if edicoes else 0
-
-    if total_edicoes == 0:
-        perfil = "Sem histórico"
-    elif total_edicoes <= 2:
-        perfil = "MC iniciante"
-    elif total_edicoes >= 8 and intervalo >= 15:
-        perfil = "MC veterano"
-    elif total_edicoes >= 5:
-        perfil = "MC constante"
-    else:
-        perfil = "MC em ascensão"
-
+    # 1. CALCULAR AS NOVAS MÉTRICAS (COM DETECÇÃO INTELIGENTE)
+    # Detectar coluna de vitórias automaticamente (VT (4) ou VT (5))
+    coluna_vt = None
+    for col in df.columns:
+        if str(col).strip().upper().startswith('VT'):
+            coluna_vt = col
+            break
+    
+    # Métricas principais
+    numero_vitorias = int(mc_row.get(coluna_vt, 0)) if coluna_vt else 0
+    numero_vices = int(mc_row.get("VC (3)", 0))
+    numero_finais = numero_vitorias + numero_vices
+    
+    # Detectar coluna de 2x0 automaticamente
+    coluna_2x0 = None
+    for col in df.columns:
+        if '2x0' in str(col).lower():
+            coluna_2x0 = col
+            break
+    numero_2x0 = int(mc_row.get(coluna_2x0, 0)) if coluna_2x0 else 0
+    
+    # Número de edições (estimativa baseada em participações)
+    # Cada VT, VC, SM, 2ªF conta como uma participação
+    participacoes = 0
+    for col in ["VT", "VC", "SM", "2ªF"]:
+        for col_real in df.columns:
+            if col in str(col_real):
+                valor = mc_row.get(col_real, 0)
+                participacoes += int(valor) if not pd.isna(valor) else 0
+    
+    # 2. VERIFICAR SE TEM ALGUMA PARTICIPAÇÃO (para "Semente")
+    tem_participacao = False
+    for col in ["VT", "VC", "SM", "2ªF"]:
+        for col_real in df.columns:
+            if col in str(col_real):
+                valor = mc_row.get(col_real, 0)
+                if not pd.isna(valor) and int(valor) > 0:
+                    tem_participacao = True
+                    break
+        if tem_participacao:
+            break
+    
+    # 3. SISTEMA DE CLASSIFICAÇÃO FINAL (COM TODAS AS NOSSAS ALTERAÇÕES)
+    # Hierarquia: Lenda → Finalista → Dominador (4+ 2x0) → Guerreiro → Promessa → Ascensão → Semente → Radar
+    
+    if numero_finais >= 8:
+        perfil = "🏆 Dono do Pódio - Lenda Consagrada"
+        descricao = "Microfone que dita a lei, referência absoluta do circuito."
+        cor_titulo = "#FFD700"  # Ouro
+        emoji = "🏆"
+    elif numero_finais >= 5:
+        perfil = "🎤 Voz da Final - Pressão Constante"
+        descricao = "Sempre no embate decisivo, pressiona os grandes."
+        cor_titulo = "#1DB954"  # Verde
+        emoji = "🎤"
+    elif numero_2x0 >= 4:  # ALTERADO: 4+ 2x0 (era 3)
+        perfil = "🔊 Dominador Absoluto - Aplica o 2x0"
+        descricao = "Quando sobe no palco, a plateia já sabe: vai ser arraso."
+        cor_titulo = "#7A1FA2"  # Roxo
+        emoji = "🔊"
+    elif participacoes >= 8:  # MOVIDO: Agora ABAIXO do Dominador
+        perfil = "📀 Guerreiro da Roda - Construção Diária"
+        descricao = "Presença que fortalece o coletivo, base do movimento."
+        cor_titulo = "#3498db"  # Azul
+        emoji = "📀"
+    elif numero_finais >= 1:
+        perfil = "💿 Promessa Concretizada - Sangue de Finalista"
+        descricao = "Provou que tem o sangue, chegou onde poucos chegam."
+        cor_titulo = "#e74c3c"  # Vermelho
+        emoji = "💿"
+    elif participacoes >= 4:
+        perfil = "🎚️ Voz em Ascensão - Crescendo no Ritmo"
+        descricao = "Frequência que aumenta, aprendizado em cada batalha."
+        cor_titulo = "#2ecc71"  # Verde claro
+        emoji = "🎚️"
+    elif tem_participacao:  # NOVO: Tem participação mas não atingiu métricas acima
+        perfil = "💚 Semente na Roda - Brotando no Microfone"
+        descricao = "Já entrou na roda, construindo sua história no coletivo."
+        cor_titulo = "#1DB954"  # Verde do LV
+        emoji = "💚"
+    else:  # Está no ranking mas sem participações registradas
+        perfil = "🎧 Presença no Radar - Olho no Talento"
+        descricao = "Nome no ranking, potencial sendo observado pelo coletivo."
+        cor_titulo = "#f39c12"  # Laranja
+        emoji = "🎧"
+    
+    # 4. CARD ESTILIZADO FINAL (COM EMOJIS TEMÁTICOS)
     st.markdown(
         f"""
         <div style="
-            padding:24px;
-            border-radius:18px;
-            background:linear-gradient(135deg,#1DB95422,#6A0DAD22);
-            border:2px solid #6A0DAD55;
+            padding:28px;
+            border-radius:20px;
+            background: linear-gradient(145deg, #0f0f0f, #1a1a1a);
+            border: 2px solid {cor_titulo}55;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            height:100%;
         ">
-            <h3 style="color:#6A0DAD">{perfil}</h3>
-            <p><strong>🎤 Edições:</strong> {total_edicoes}</p>
-            <p><strong>📍 Primeira edição:</strong> {primeira}</p>
-            <p><strong>📍 Última edição:</strong> {ultima}</p>
-            <p><strong>⏱️ Intervalo:</strong> {intervalo} edições</p>
+            <div style="text-align:center; font-size:32px; margin-bottom:8px;">
+                {emoji}
+            </div>
+            
+            <h3 style="
+                color:{cor_titulo};
+                margin-top:0;
+                margin-bottom:12px;
+                font-size:20px;
+                text-align:center;
+                font-weight:800;
+            ">
+                {perfil}
+            </h3>
+            
+            <p style="
+                color:#bdbdbd;
+                font-style:italic;
+                text-align:center;
+                margin-bottom:24px;
+                font-size:13px;
+                line-height:1.4;
+                padding:0 10px;
+            ">
+                {descricao}
+            </p>
+            
+            <div style="
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+                margin-top: 20px;
+            ">
+                <div style="text-align:center;">
+                    <div style="font-size:12px;color:#888;margin-bottom:4px;">🎤 FINAIS</div>
+                    <div style="font-size:28px;font-weight:bold;color:#1DB954;">{numero_finais}</div>
+                    <div style="font-size:11px;color:#666;">(VITÓRIAS + VICES)</div>
+                </div>
+                
+                <div style="text-align:center;">
+                    <div style="font-size:12px;color:#888;margin-bottom:4px;">🔊 2x0</div>
+                    <div style="font-size:28px;font-weight:bold;color:#7A1FA2;">{numero_2x0}</div>
+                    <div style="font-size:11px;color:#666;">DOMINÂNCIA</div>
+                </div>
+                
+                <div style="text-align:center;">
+                    <div style="font-size:12px;color:#888;margin-bottom:4px;">🏆 VITÓRIAS</div>
+                    <div style="font-size:28px;font-weight:bold;color:#FFD700;">{numero_vitorias}</div>
+                    <div style="font-size:11px;color:#666;">NO TOPO</div>
+                </div>
+                
+                <div style="text-align:center;">
+                    <div style="font-size:12px;color:#888;margin-bottom:4px;">📀 EDIÇÕES</div>
+                    <div style="font-size:28px;font-weight:bold;color:#3498db;">{participacoes}</div>
+                    <div style="font-size:11px;color:#666;">PRESENÇAS</div>
+                </div>
+            </div>
+            
+            <div style="
+                margin-top:24px;
+                padding-top:16px;
+                border-top:1px solid #333;
+                text-align:center;
+            ">
+                <div style="font-size:11px;color:#666;font-style:italic;">
+                    {mc_selected} • Larga o Verbo {ano_selecionado}
+                </div>
+            </div>
         </div>
         """,
         unsafe_allow_html=True
@@ -479,6 +610,7 @@ components.html(
     """,
     height=120
 )
+
 
 
 
