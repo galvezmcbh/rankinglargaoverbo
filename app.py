@@ -94,29 +94,46 @@ df = pd.read_excel(arquivos_anos[ano_selecionado])
 df.columns = df.columns.str.strip()
 df.fillna(0, inplace=True)
 # ─────────────────────────────────────────────
-# MÉTRICAS DO TOPO (AGORA DEFINIDAS)
+# MÉTRICAS DO TOPO (COM DETECÇÃO INTELIGENTE)
 # ─────────────────────────────────────────────
 
 total_mcs = df["MC"].nunique()
 
+# 1. Líder atual (mantido igual)
 lider_atual = (
     df.sort_values("PTS", ascending=False)
     .iloc[0]["MC"]
 )
 
-mais_vitorias = (
-    df.loc[df["VT (4)"].idxmax()]["MC"]
-    if "VT (4)" in df.columns else "—"
-)
+# 2. DETECTAR COLUNA DE VITÓRIAS automaticamente
+coluna_vitorias = None
+for col in df.columns:
+    if str(col).strip().upper().startswith('VT'):
+        coluna_vitorias = col
+        break
 
+# 3. DETECTAR COLUNA DE VITÓRIAS 2x0 automaticamente  
+coluna_2x0 = None
+for col in df.columns:
+    if '2x0' in str(col).lower():
+        coluna_2x0 = col
+        break
+
+# 4. Calcular métricas com colunas detectadas
+if coluna_vitorias:
+    mais_vitorias = df.loc[df[coluna_vitorias].idxmax()]["MC"]
+else:
+    mais_vitorias = "—"
+
+if coluna_2x0 and coluna_2x0 in df.columns:
+    mais_2x0 = df.loc[df[coluna_2x0].idxmax()]["MC"]
+else:
+    mais_2x0 = "—"
+
+# 5. Mantenha a métrica de vices (não mudou entre anos)
 mais_vices = (
     df.loc[df["VC (3)"].idxmax()]["MC"]
     if "VC (3)" in df.columns else "—"
-)
-
-mais_2x0 = (
-    df.loc[df["2x0 (1)"].idxmax()]["MC"]
-    if "2x0 (1)" in df.columns else "—"
 )
 
 # histórico completo
@@ -435,6 +452,7 @@ components.html(
     """,
     height=120
 )
+
 
 
 
