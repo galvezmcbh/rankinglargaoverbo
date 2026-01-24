@@ -398,26 +398,28 @@ with col2:
         emoji = "🎧"
     
     # 3. CARD HTML (FORMATAÇÃO VERIFICADA)
-    html_card = f"""
+        card_html = f"""
     <div style="
-        padding:28px;
+        padding:24px;
         border-radius:20px;
         background: linear-gradient(145deg, #0f0f0f, #1a1a1a);
         border: 2px solid {cor_titulo}55;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        height:100%;
+        height:380px;
+        font-family: Arial, sans-serif;
     ">
-        <div style="text-align:center; font-size:32px; margin-bottom:8px;">
+        <div style="text-align:center; font-size:36px; margin-bottom:10px;">
             {emoji}
         </div>
         
         <h3 style="
             color:{cor_titulo};
             margin-top:0;
-            margin-bottom:12px;
-            font-size:20px;
+            margin-bottom:14px;
+            font-size:22px;
             text-align:center;
             font-weight:800;
+            line-height:1.2;
         ">
             {perfil}
         </h3>
@@ -426,10 +428,10 @@ with col2:
             color:#bdbdbd;
             font-style:italic;
             text-align:center;
-            margin-bottom:24px;
-            font-size:13px;
-            line-height:1.4;
-            padding:0 10px;
+            margin-bottom:28px;
+            font-size:15px;
+            line-height:1.5;
+            padding:0 8px;
         ">
             {descricao}
         </p>
@@ -437,41 +439,41 @@ with col2:
         <div style="
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 16px;
+            gap: 18px;
             margin-top: 20px;
         ">
             <div style="text-align:center;">
-                <div style="font-size:12px;color:#888;margin-bottom:4px;">🎤 FINAIS</div>
-                <div style="font-size:28px;font-weight:bold;color:#1DB954;">{numero_finais}</div>
-                <div style="font-size:11px;color:#666;">(VITÓRIAS + VICES)</div>
+                <div style="font-size:14px;color:#aaa;margin-bottom:6px;font-weight:600;">🎤 FINAIS</div>
+                <div style="font-size:32px;font-weight:bold;color:#1DB954;line-height:1;">{numero_finais}</div>
+                <div style="font-size:12px;color:#777;margin-top:4px;">(VITÓRIAS + VICES)</div>
             </div>
             
             <div style="text-align:center;">
-                <div style="font-size:12px;color:#888;margin-bottom:4px;">🔊 2x0</div>
-                <div style="font-size:28px;font-weight:bold;color:#7A1FA2;">{numero_2x0}</div>
-                <div style="font-size:11px;color:#666;">DOMINÂNCIA</div>
+                <div style="font-size:14px;color:#aaa;margin-bottom:6px;font-weight:600;">🔊 2x0</div>
+                <div style="font-size:32px;font-weight:bold;color:#7A1FA2;line-height:1;">{numero_2x0}</div>
+                <div style="font-size:12px;color:#777;margin-top:4px;">DOMINÂNCIA</div>
             </div>
             
             <div style="text-align:center;">
-                <div style="font-size:12px;color:#888;margin-bottom:4px;">🏆 VITÓRIAS</div>
-                <div style="font-size:28px;font-weight:bold;color:#FFD700;">{numero_vitorias}</div>
-                <div style="font-size:11px;color:#666;">NO TOPO</div>
+                <div style="font-size:14px;color:#aaa;margin-bottom:6px;font-weight:600;">🏆 VITÓRIAS</div>
+                <div style="font-size:32px;font-weight:bold;color:#FFD700;line-height:1;">{numero_vitorias}</div>
+                <div style="font-size:12px;color:#777;margin-top:4px;">NO TOPO</div>
             </div>
             
             <div style="text-align:center;">
-                <div style="font-size:12px;color:#888;margin-bottom:4px;">📀 EDIÇÕES</div>
-                <div style="font-size:28px;font-weight:bold;color:#3498db;">{participacoes}</div>
-                <div style="font-size:11px;color:#666;">PRESENÇAS</div>
+                <div style="font-size:14px;color:#aaa;margin-bottom:6px;font-weight:600;">📀 EDIÇÕES</div>
+                <div style="font-size:32px;font-weight:bold;color:#3498db;line-height:1;">{participacoes}</div>
+                <div style="font-size:12px;color:#777;margin-top:4px;">PRESENÇAS</div>
             </div>
         </div>
         
         <div style="
-            margin-top:24px;
-            padding-top:16px;
+            margin-top:28px;
+            padding-top:18px;
             border-top:1px solid #333;
             text-align:center;
         ">
-            <div style="font-size:11px;color:#666;font-style:italic;">
+            <div style="font-size:13px;color:#888;font-style:italic;font-weight:500;">
                 {mc_selected} • Larga o Verbo {ano_selecionado}
             </div>
         </div>
@@ -614,6 +616,7 @@ components.html(
     """,
     height=120
 )
+
 
 
 
