@@ -361,7 +361,7 @@ with col2:
         descricao = "Microfone que dita a lei, referência absoluta do circuito."
         cor_titulo = "#FFD700"
         emoji = "🏆"
-    elif numero_finais >= 5:
+    elif numero_finais >= 6:
         perfil = "🎤 Voz da Final - Pressão Constante"
         descricao = "Sempre no embate decisivo, pressiona os grandes."
         cor_titulo = "#1DB954"
@@ -622,6 +622,7 @@ components.html(
     """,
     height=120
 )
+
 
 
 
