@@ -217,7 +217,6 @@ st.plotly_chart(fig_rank, use_container_width=True)
 # ─────────────────────────────────────────────
 # ANÁLISE INDIVIDUAL
 # ─────────────────────────────────────────────
-st.subheader("🧬 Análise Individual")
 
 col_titulo, col_botao = st.columns([4, 1])
 with col_titulo:
@@ -265,19 +264,7 @@ with col2:
     primeira_edicao = min(edicoes) if edicoes else "—"
     ultima_edicao = max(edicoes) if edicoes else "—"
     intervalo = (ultima_edicao - primeira_edicao) if total_edicoes >= 2 else 0
-
-    # classificação
-    if total_edicoes == 0:
-        perfil_mc = "Sem histórico registrado"
-    elif total_edicoes <= 2:
-        perfil_mc = "MC iniciante"
-    elif total_edicoes >= 8 and intervalo >= 10:
-        perfil_mc = "MC veterano"
-    elif total_edicoes >= 5:
-        perfil_mc = "MC constante"
-    else:
-        perfil_mc = "MC em ascensão"
-
+    
 
 # métricas semânticas
 vitorias = texto_lower.count("vitória")
@@ -696,6 +683,7 @@ components.html(
     """,
     height=120
 )
+
 
 
 
