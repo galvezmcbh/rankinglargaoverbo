@@ -5,6 +5,14 @@ import plotly.express as px
 import streamlit.components.v1 as components
 import os
 import re
+import streamlit as st
+
+# Limpar cache forçadamente
+try:
+    st.cache_data.clear()
+    st.cache_resource.clear()
+except:
+    pass
 def card_lv(titulo, valor, cor):
     st.markdown(
         f"""
@@ -683,6 +691,7 @@ components.html(
     """,
     height=120
 )
+
 
 
 
