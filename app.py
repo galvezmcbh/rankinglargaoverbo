@@ -352,7 +352,7 @@ with col2:
     
     # LÓGICA DE CLASSIFICAÇÃO (LÍDER TEM PRIORIDADE ABSOLUTA)
     if eh_lider:
-        perfil = "🏆 Dono do Pódio - Lenda Consagrada"
+        perfil = "🏆 Líder Atual - Lenda Consagrada"
         descricao = "Líder do ranking! Microfone que dita a lei, referência absoluta do circuito."
         cor_titulo = "#FFD700"
         emoji = "🏆"
@@ -622,6 +622,7 @@ components.html(
     """,
     height=120
 )
+
 
 
 
