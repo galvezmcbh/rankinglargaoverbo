@@ -262,22 +262,49 @@ elif total_edicoes >= 3:
 else:
     perfil_mc = "Participação pontual"
 
-# ── Gráfico de indicadores
+# ── Gráfico de indicadores (DETECÇÃO FLEXÍVEL)
 with col1:
-    valid_cols = [c for c in result_map if c in df.columns]
-
-    fig_mc = px.bar(
-        pd.DataFrame({
-            "Resultado": [result_map[c] for c in valid_cols],
-            "Quantidade": [mc_row[c] for c in valid_cols]
-        }),
-        x="Resultado",
-        y="Quantidade",
-        text="Quantidade",
-        color_discrete_sequence=["#7A1FA2"]
-    )
-
-    st.plotly_chart(fig_mc, use_container_width=True)
+    # 1. ENCONTRAR COLUNAS REAIS usando o mapeamento original
+    colunas_encontradas = []
+    nomes_amigaveis = []
+    
+    for col_original, nome_amigavel in result_map.items():
+        if col_original in df.columns:
+            colunas_encontradas.append(col_original)
+            nomes_amigaveis.append(nome_amigavel)
+        else:
+            # Se não encontrar, tenta variações
+            for col_real in df.columns:
+                # Procura por padrões similares
+                if 'VT' in col_original and 'VT' in str(col_real):
+                    colunas_encontradas.append(col_real)
+                    nomes_amigaveis.append('Vitórias')
+                    break
+                elif col_original in str(col_real):
+                    colunas_encontradas.append(col_real)
+                    nomes_amigaveis.append(nome_amigavel)
+                    break
+    
+    # 2. CRIAR GRÁFICO (MANTENDO INFORMAÇÃO ORIGINAL)
+    if colunas_encontradas:
+        fig_mc = px.bar(
+            pd.DataFrame({
+                "Resultado": nomes_amigaveis,
+                "Quantidade": [mc_row[c] for c in colunas_encontradas]
+            }),
+            x="Resultado",
+            y="Quantidade",
+            text="Quantidade",
+            color_discrete_sequence=["#7A1FA2"]
+        )
+        
+        # 3. MANTÉM A INFORMAÇÃO ORIGINAL ABAIXO DO GRÁFICO
+        st.plotly_chart(fig_mc, use_container_width=True)
+        
+        # Esta parte mostra a informação interna (controle)
+        st.caption(f"🎯 Colunas detectadas: {', '.join(colunas_encontradas)}")
+    else:
+        st.warning("Nenhuma coluna de desempenho encontrada.")
 
 # ── Card de trajetória (corrigido)
 with col2:
@@ -452,6 +479,7 @@ components.html(
     """,
     height=120
 )
+
 
 
 
