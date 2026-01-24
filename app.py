@@ -219,12 +219,23 @@ st.plotly_chart(fig_rank, use_container_width=True)
 # ─────────────────────────────────────────────
 st.subheader("🧬 Análise Individual")
 
+# ─────────────────────────────────────────────
+# ANÁLISE INDIVIDUAL
+# ─────────────────────────────────────────────
 col_titulo, col_botao = st.columns([4, 1])
 with col_titulo:
     st.subheader("🧬 Análise Individual")
 with col_botao:
-    if st.button("📋 Ver Perfis Completos", use_container_width=True):
-        st.switch_page("pages/1_📋_Perfis_dos_MCs.py")
+    # Método 1: Tenta switch_page primeiro
+    try:
+        if st.button("📋 Ver Perfis Completos", use_container_width=True, key="btn_perfis_1"):
+            st.switch_page("pages/1_Perfis_dos_MCs.py")
+    except:
+        # Método 2: Se falhar, usa link_button
+        st.link_button("📋 Ver Perfis Completos", 
+                      url="/1_Perfis_dos_MCs",
+                      use_container_width=True,
+                      key="btn_perfis_2")
         
 mc_selected = st.selectbox(
     "Selecione um MC",
@@ -692,6 +703,7 @@ components.html(
     """,
     height=120
 )
+
 
 
 
