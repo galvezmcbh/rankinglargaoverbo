@@ -339,77 +339,103 @@ if len(mc_compare) == 2:
     st.plotly_chart(fig_compare, use_container_width=True)
 
 # ─────────────────────────────────────────────
-# RODAPÉ · SOBRE O LARGA O VERBO
+# ✨ FRASE DE DESTAQUE
 # ─────────────────────────────────────────────
-st.divider()
-
-st.markdown("""
-## 💚 Largo Verbo
-
-O Larga o Verbo é um movimento cultural que teve início em agosto de 2022, originalmente como uma batalha de MCs.  
-Ao longo de nossa trajetória, percebemos que o LV vai além do elemento da rima, tornando-se um espaço de fortalecimento e valorização das expressões culturais periféricas e marginais.
-
-Nosso foco é fomentar iniciativas que dialoguem diretamente com a juventude local, promovendo ações que englobem tanto os elementos da cultura Hip Hop quanto outras manifestações culturais relevantes.
-""")
-
-# FRASE DESTACADA (MENOR, MAIS APAGADA, MAS PRESENTE)
 st.markdown(
     """
     <div style="
-        text-align: center;
-        margin: 20px 0 30px 0;
-        font-size: 0.95rem;
-        color: #9b9b9b;
-        font-style: italic;
+        margin-top:40px;
+        text-align:center;
+        font-size:15px;
+        color:#bdbdbd;
+        font-style:italic;
     ">
-        Mais do que rima, largo verba espaço de voz, troca e construção cultural
+        Mais do que rima, o Larga o Verbo é espaço de voz, troca e construção cultural.
     </div>
     """,
     unsafe_allow_html=True
 )
 
-# BOTÕES CENTRALIZADOS
+# ─────────────────────────────────────────────
+# 📌 MINI BIO · LARGA O VERBO
+# ─────────────────────────────────────────────
 st.markdown(
     """
     <div style="
-        display: flex;
-        justify-content: center;
-        gap: 16px;
-        margin-top: 20px;
+        margin-top:30px;
+        max-width:900px;
+        margin-left:auto;
+        margin-right:auto;
+        background:linear-gradient(135deg,#1DB95411,#7A1FA211);
+        padding:28px;
+        border-radius:18px;
+        border:1px solid #7A1FA244;
+    ">
+        <h3 style="color:#1DB954;text-align:center;">
+            💚 Larga o Verbo
+        </h3>
+        <p style="text-align:justify;">
+            O Larga o Verbo é um movimento cultural que teve início em agosto de 2022,
+            originalmente como uma batalha de MCs. Ao longo de nossa trajetória,
+            percebemos que o LV vai além do elemento da rima, tornando-se um espaço de
+            fortalecimento e valorização das expressões culturais periféricas e marginais.
+        </p>
+        <p style="text-align:justify;">
+            Nosso foco é fomentar iniciativas que dialoguem diretamente com a juventude
+            local, promovendo ações que englobem tanto os elementos da cultura Hip Hop
+            quanto outras manifestações culturais relevantes.
+        </p>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+# ─────────────────────────────────────────────
+# 🔗 BOTÕES CENTRALIZADOS (HTML PURO)
+# ─────────────────────────────────────────────
+components.html(
+    """
+    <div style="
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        gap:16px;
+        margin-top:30px;
     ">
         <a href="https://www.instagram.com/largaoverbo" target="_blank">
             <button style="
-                background-color: #1DB954;
-                color: white;
-                padding: 14px 24px;
-                border: none;
-                border-radius: 12px;
-                font-size: 16px;
-                font-weight: 600;
-                cursor: pointer;
+                background-color:#1DB954;
+                color:white;
+                padding:14px 26px;
+                border:none;
+                border-radius:12px;
+                font-size:16px;
+                font-weight:600;
+                cursor:pointer;
             ">
-                📸 Instagram
+                📲 Instagram
             </button>
         </a>
 
         <a href="https://www.youtube.com/@largaoverbolv" target="_blank">
             <button style="
-                background-color: #7A1FA2;
-                color: white;
-                padding: 14px 24px;
-                border: none;
-                border-radius: 12px;
-                font-size: 16px;
-                font-weight: 600;
-                cursor: pointer;
+                background-color:#7A1FA2;
+                color:white;
+                padding:14px 26px;
+                border:none;
+                border-radius:12px;
+                font-size:16px;
+                font-weight:600;
+                cursor:pointer;
             ">
                 ▶️ YouTube
             </button>
         </a>
     </div>
     """,
-    unsafe_allow_html=True
+    height=120
 )
+
 
 
 
