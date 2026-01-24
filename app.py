@@ -475,7 +475,7 @@ with col2:
             </div>
         </div>
         """,
-        unsafe_allow_html=True
+       unsafe_allow_html=True
     )
 
 # ─────────────────────────────────────────────
@@ -610,6 +610,7 @@ components.html(
     """,
     height=120
 )
+
 
 
 
