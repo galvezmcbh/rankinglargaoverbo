@@ -361,7 +361,7 @@ with col2:
         descricao = "Microfone que dita a lei, referência absoluta do circuito."
         cor_titulo = "#FFD700"
         emoji = "🏆"
-    elif numero_finais >= 6:
+    elif numero_finais >= 5:
         perfil = "🎤 Voz da Final - Pressão Constante"
         descricao = "Sempre no embate decisivo, pressiona os grandes."
         cor_titulo = "#1DB954"
@@ -371,12 +371,17 @@ with col2:
         descricao = "Quando sobe no palco, a plateia já sabe: vai ser arraso."
         cor_titulo = "#7A1FA2"
         emoji = "🔊"
+    elif numero_vitorias >= 1 and participacoes <= 3:  # NOVA CATEGORIA
+        perfil = "⚡ Vitorioso de Passagem - Impacto Imediato"
+        descricao = "Poucas aparições, mas quando veio, veio pra vencer. Deixou marca."
+        cor_titulo = "#FF6B00"  # Laranja forte
+        emoji = "⚡"
     elif participacoes >= 8:
         perfil = "📀 Guerreiro da Roda - Construção Diária"
         descricao = "Presença que fortalece o coletivo, base do movimento."
         cor_titulo = "#3498db"
         emoji = "📀"
-    elif numero_finais >= 2:
+    elif numero_finais >= 1:
         perfil = "💿 Promessa Concretizada - Sangue de Finalista"
         descricao = "Provou que tem o sangue, chegou onde poucos chegam."
         cor_titulo = "#e74c3c"
@@ -617,6 +622,7 @@ components.html(
     """,
     height=120
 )
+
 
 
 
