@@ -218,7 +218,18 @@ st.plotly_chart(fig_rank, use_container_width=True)
 # ANÁLISE INDIVIDUAL
 # ─────────────────────────────────────────────
 st.subheader("🧬 Análise Individual")
+col_titulo, col_botao = st.columns([4, 1])
+with col_titulo:
+    st.subheader("🧬 Análise Individual")
+with col_botao:
+    if st.button("📋 Ver Perfis Completos", use_container_width=True):
+        st.switch_page("pages/1_📋_Perfis_dos_MCs.py")
 
+# O resto continua igual...
+mc_selected = st.selectbox(
+    "Selecione um MC",
+    sorted(df["MC"].unique())
+)
 mc_selected = st.selectbox(
     "Selecione um MC",
     sorted(df["MC"].unique())
@@ -681,6 +692,7 @@ components.html(
     """,
     height=120
 )
+
 
 
 
