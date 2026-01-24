@@ -44,6 +44,7 @@ st.set_page_config(
 )
 
 # ─────────────────────────────────────────────
+# ─────────────────────────────────────────────
 # ESTILO GLOBAL
 # ─────────────────────────────────────────────
 st.markdown(
@@ -54,11 +55,25 @@ st.markdown(
         color:#eaeaea;
     }
 
-    span[data-testid="stMultiSelectTag"] {
+    /* COR ROXA PARA CARDS SELECIONADOS - VERSÃO CORRIGIDA */
+    div[data-baseweb="select"] span[role="button"] {
         background-color:#7A1FA2 !important;
         color:white !important;
-        border-radius:12px;
-        font-weight:600;
+        border-radius:12px !important;
+        font-weight:600 !important;
+        border:none !important;
+        padding:4px 10px !important;
+        margin:2px 4px !important;
+    }
+    
+    /* Efeito hover */
+    div[data-baseweb="select"] span[role="button"]:hover {
+        background-color:#6A0DAD !important;
+    }
+    
+    /* Remove qualquer estilo antigo */
+    span[data-testid="stMultiSelectTag"] {
+        background-color:transparent !important;
     }
     </style>
     """,
@@ -666,6 +681,7 @@ components.html(
     """,
     height=120
 )
+
 
 
 
