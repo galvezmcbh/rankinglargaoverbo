@@ -491,39 +491,83 @@ with col2:
     components.html(card_html, height=420)
 
 # ─────────────────────────────────────────────
-# ⚔️ COMPARAÇÃO ENTRE MCs
+# ─────────────────────────────────────────────
+# ⚔️ COMPARAÇÃO ENTRE MCs (ATUALIZADO)
 # ─────────────────────────────────────────────
 st.subheader("⚔️ Comparação entre MCs")
 
 mc_compare = st.multiselect(
-    "Selecione dois MCs",
+    "Selecione até 4 MCs para comparar",
     df["MC"].unique(),
-    max_selections=2
+    max_selections=4
 )
 
-if len(mc_compare) == 2:
-    comp = df[df["MC"].isin(mc_compare)]
-    cols = [c for c in result_map if c in df.columns]
-
-    long = comp.melt(
-        id_vars="MC",
-        value_vars=cols,
-        var_name="Resultado",
-        value_name="Quantidade"
-    )
-
-    long["Resultado"] = long["Resultado"].map(result_map)
-
-    fig_compare = px.bar(
-        long,
-        x="Resultado",
-        y="Quantidade",
-        color="MC",
-        barmode="group",
-        color_discrete_sequence=["#1DB954", "#7A1FA2"]
-    )
-
-    st.plotly_chart(fig_compare, use_container_width=True)
+if len(mc_compare) >= 2:
+    # 1. DETECTAR COLUNAS DINAMICAMENTE (igual ao gráfico individual)
+    colunas_para_comparar = []
+    nomes_amigaveis = []
+    
+    # Mapeamento flexível (mesma lógica do gráfico individual)
+    mapeamento_flex = {
+        'Vitórias': ['VT', 'VITÓRIA', 'VITÓRIAS'],
+        'Vices': ['VC', 'VICE', 'VICES'],
+        'Semifinais': ['SM', 'SEMIFINAL', 'SEMIFINAIS'],
+        '2ª Fase': ['2ªF', '2ª FASE', 'SEGUNDA FASE'],
+        'Vitórias 2x0': ['2x0', '2X0']
+    }
+    
+    # Encontrar colunas reais
+    for nome_amigavel, padroes in mapeamento_flex.items():
+        encontrou = False
+        for padrao in padroes:
+            for coluna_real in df.columns:
+                if padrao in str(coluna_real).upper():
+                    colunas_para_comparar.append(coluna_real)
+                    nomes_amigaveis.append(nome_amigavel)
+                    encontrou = True
+                    break
+            if encontrou:
+                break
+    
+    if colunas_para_comparar:
+        # 2. PREPARAR DADOS
+        comp = df[df["MC"].isin(mc_compare)]
+        
+        # Transformar para formato longo
+        dados_longos = []
+        for _, row in comp.iterrows():
+            for col_real, nome_amig in zip(colunas_para_comparar, nomes_amigaveis):
+                dados_longos.append({
+                    "MC": row["MC"],
+                    "Resultado": nome_amig,
+                    "Quantidade": row.get(col_real, 0)
+                })
+        
+        df_long = pd.DataFrame(dados_longos)
+        
+        # 3. CRIAR GRÁFICO (mantendo a estética original)
+        fig_compare = px.bar(
+            df_long,
+            x="Resultado",
+            y="Quantidade",
+            color="MC",
+            barmode="group",
+            color_discrete_sequence=["#1DB954", "#7A1FA2", "#FF6B00", "#3498db"][:len(mc_compare)]
+        )
+        
+        # Configurações visuais (iguais ao original)
+        fig_compare.update_layout(
+            xaxis_title=None,
+            yaxis_title="Quantidade",
+            plot_bgcolor='rgba(0,0,0,0)',
+            paper_bgcolor='rgba(0,0,0,0)',
+            font_color='#eaeaea',
+            legend_title_text="MCs"
+        )
+        
+        st.plotly_chart(fig_compare, use_container_width=True)
+    else:
+        st.warning("Não foi possível detectar colunas para comparação.")
 
 # ─────────────────────────────────────────────
 # ✨ FRASE DE DESTAQUE
@@ -622,6 +666,7 @@ components.html(
     """,
     height=120
 )
+
 
 
 
