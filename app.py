@@ -44,7 +44,43 @@ st.set_page_config(
     page_title="Larga o Verbo | Dashboard",
     layout="wide"
 )
+# ─────────────────────────────────────────────
+# CONFIGURAÇÕES GERAIS
+# ─────────────────────────────────────────────
+st.set_page_config(
+    page_title="Larga o Verbo | Dashboard",
+    layout="wide",
+    initial_sidebar_state="collapsed",  # ← Menu lateral fechado
+    menu_items={
+        'Get Help': None,     # Remove link de ajuda
+        'Report a bug': None, # Remove reportar bug
+        'About': None         # Remove about
+    }
+)
 
+# ─────────────────────────────────────────────
+# OCULTAR MENU LATERAL AUTOMÁTICO
+# ─────────────────────────────────────────────
+st.markdown(
+    """
+    <style>
+    /* Oculta o menu lateral de navegação automático */
+    [data-testid="stSidebarNav"] {
+        display: none;
+    }
+    
+    /* Oculta o menu superior do Streamlit */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    
+    /* Garante que o botão de menu não aparece */
+    .st-emotion-cache-1oe5cao {
+        display: none !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 # ─────────────────────────────────────────────
 # ─────────────────────────────────────────────
 # ESTILO GLOBAL
@@ -685,6 +721,7 @@ components.html(
     """,
     height=120
 )
+
 
 
 
