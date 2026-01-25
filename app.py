@@ -260,21 +260,11 @@ col_titulo, col_botao = st.columns([4, 1])
 with col_titulo:
     st.subheader("🧬 Análise Individual")
 with col_botao:
-    # Método 1: Tenta switch_page primeiro
-    try:
-        if st.button("📋 Ver Perfis Completos", use_container_width=True, key="btn_perfis_1"):
-            st.switch_page("pages/1_Perfis_dos_MCs.py")
-    except:
-        # Método 2: Se falhar, usa link_button
-        st.link_button("📋 Ver Perfis Completos", 
-                      url="/1_Perfis_dos_MCs",
-                      use_container_width=True,
-                      key="btn_perfis_2")
-        
-mc_selected = st.selectbox(
-    "Selecione um MC",
-    sorted(df["MC"].unique())
-)
+    # Botão que navega para a página de perfis
+    if st.button("📋 Ver Perfis Completos", use_container_width=True, key="btn_perfis"):
+        # Navegação direta sem mostrar menu lateral
+        st.markdown('<meta http-equiv="refresh" content="0; url=/1_Perfis_dos_MCs">', 
+                   unsafe_allow_html=True)
 
 mc_row = df[df["MC"] == mc_selected].iloc[0]
 
@@ -721,6 +711,7 @@ components.html(
     """,
     height=120
 )
+
 
 
 
