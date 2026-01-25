@@ -246,29 +246,13 @@ col_titulo, col_botao = st.columns([4, 1])
 with col_titulo:
     st.subheader("🧬 Análise Individual")
 with col_botao:
-    # Botão com navegação por URL (sempre funciona)
-    st.markdown(
-        """
-        <a href="./1_Perfis_dos_MCs" target="_self" style="text-decoration: none; display: block;">
-            <div style="
-                background-color: #7A1FA2;
-                color: white;
-                padding: 10px 16px;
-                border-radius: 8px;
-                text-align: center;
-                font-weight: 600;
-                cursor: pointer;
-                width: 100%;
-                border: none;
-                font-size: 14px;
-                margin-top: 8px;
-            ">
-                📋 Ver Perfis Completos
-            </div>
-        </a>
-        """,
-        unsafe_allow_html=True
-    )
+    if st.button("📋 Ver Perfis Completos", use_container_width=True):
+        # Navegação via JavaScript
+        st.components.v1.html("""
+            <script>
+                window.location.href = "./1_Perfis_dos_MCs";
+            </script>
+        """, height=0)
 
 # ←←←←←←←←←←←←← **ESTE SELECTBOX DEVE EXISTIR AQUI!** ←←←←←←←←←←←←←
 mc_selected = st.selectbox(
@@ -720,6 +704,7 @@ components.html(
     """,
     height=120
 )
+
 
 
 
