@@ -37,14 +37,37 @@ def card_lv(titulo, valor, cor):
         unsafe_allow_html=True
     )
 
-# ─────────────────────────────────────────────
-# CONFIGURAÇÕES GERAIS
-# ─────────────────────────────────────────────
 st.set_page_config(
     page_title="Larga o Verbo | Dashboard",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="collapsed",  # ← NOVO
+    menu_items={                        # ← NOVO
+        'Get Help': None,
+        'Report a bug': None, 
+        'About': None
+    }
 )
 
+# ─────────────────────────────────────────────
+# OCULTAR MENU LATERAL COMPLETAMENTE          ← NOVO TÍTULO
+# ─────────────────────────────────────────────
+st.markdown(
+    """
+    <style>
+    /* 1. Oculta o menu lateral... */        ← NOVO CSS
+    ...
+    /* 8. Seu estilo original */             ← SEU CSS MANTIDO
+    body {
+        background-color:#0f0f0f;
+        color:#eaeaea;
+    }
+    ...
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+st.session_state.sidebar_state = "collapsed"  # ← NOVA LINHA
 # ─────────────────────────────────────────────
 # ─────────────────────────────────────────────
 # ESTILO GLOBAL
@@ -679,6 +702,7 @@ components.html(
     """,
     height=120
 )
+
 
 
 
