@@ -216,16 +216,20 @@ mais_vices = (
     if "VC (3)" in df.columns else "—"
 )
 
-# histórico completo
-dfs = []
-for ano, arq in arquivos_anos.items():
-    temp = pd.read_excel(arq)
-    temp.columns = temp.columns.str.strip()
-    temp.fillna(0, inplace=True)
-    temp["Ano"] = int(ano)
-    dfs.append(temp)
+# ─────────────────────────────────────────────
+# 📊 CARREGAMENTO COM CACHE
+# ─────────────────────────────────────────────
+# Mostra spinner apenas na primeira execução ou quando o cache expira
+if 'df_historico' not in st.session_state:
+    with st.spinner("🔄 Carregando dados históricos (isso acontece apenas na primeira vez ou após 1 hora)..."):
+        df_historico = carregar_historico_completo(arquivos_anos)
+        st.session_state.df_historico = df_historico
+else:
+    df_historico = st.session_state.df_historico
 
-df_historico = pd.concat(dfs, ignore_index=True)
+# Verifica se temos dados
+if df_historico.empty:
+    st.warning("⚠️ Nenhum dado histórico foi carregado.")
 
 # ─────────────────────────────────────────────
 # MAPEAMENTO DE INDICADORES
@@ -758,6 +762,7 @@ components.html(
     """,
     height=120
 )
+
 
 
 
