@@ -474,173 +474,173 @@ with col1:
         st.warning("Nenhuma coluna de desempenho encontrada.")
 
 # ── CARD FINAL: Perfil Poético do MC
-with col2:
-   # 1. CALCULAR AS NOVAS MÉTRICAS (USANDO DETECTOR)
-# Reutiliza ou cria detector
-if 'detector' not in locals():
-    detector = DetectorColunas()
-    colunas_detectadas = detector.detectar_todas(df)
-elif 'colunas_detectadas' not in locals():
-    colunas_detectadas = detector.detectar_todas(df)
-
-# Usa valores do detector
-numero_vitorias = int(detector.get_valor_mc(df, mc_selected, 'VITORIAS'))
-numero_vices = int(detector.get_valor_mc(df, mc_selected, 'VICES'))
-numero_finais = numero_vitorias + numero_vices
-numero_2x0 = int(detector.get_valor_mc(df, mc_selected, 'DOIS_X_ZERO'))
-
-# Calcula participações de forma mais limpa
-participacoes = 0
-tipos_participacao = ['VITORIAS', 'VICES', 'SEMIFINAIS', 'SEGUNDA_FASE']
-for tipo in tipos_participacao:
-    participacoes += int(detector.get_valor_mc(df, mc_selected, tipo))
-
-tem_participacao = participacoes > 0
+    with col2:
+    # 1. CALCULAR AS NOVAS MÉTRICAS (USANDO DETECTOR)
+    # Reutiliza ou cria detector
+    if 'detector' not in locals():
+        detector = DetectorColunas()
+        colunas_detectadas = detector.detectar_todas(df)
+    elif 'colunas_detectadas' not in locals():
+        colunas_detectadas = detector.detectar_todas(df)
     
-       # 2. SISTEMA DE CLASSIFICAÇÃO COM LÍDER GARANTIDO COMO LENDA
-    # Verificar se é o LÍDER DO RANKING ATUAL
-    lider_do_ranking = df.sort_values("PTS", ascending=False).iloc[0]["MC"]
-    eh_lider = mc_selected == lider_do_ranking
+    # Usa valores do detector
+    numero_vitorias = int(detector.get_valor_mc(df, mc_selected, 'VITORIAS'))
+    numero_vices = int(detector.get_valor_mc(df, mc_selected, 'VICES'))
+    numero_finais = numero_vitorias + numero_vices
+    numero_2x0 = int(detector.get_valor_mc(df, mc_selected, 'DOIS_X_ZERO'))
     
-    # LÓGICA DE CLASSIFICAÇÃO (LÍDER TEM PRIORIDADE ABSOLUTA)
-    if eh_lider:
-        perfil = "🏆 Líder Atual - Lenda Consagrada"
-        descricao = "Líder do ranking! Microfone que dita a lei, referência absoluta do circuito."
-        cor_titulo = "#FFD700"
-        emoji = "🏆"
-    elif numero_finais >= 8:
-        perfil = "🏆 Dono do Pódio - Lenda Consagrada"
-        descricao = "Microfone que dita a lei, referência absoluta do circuito."
-        cor_titulo = "#FFD700"
-        emoji = "🏆"
-    elif numero_finais >= 6:
-        perfil = "🎤 Voz da Final - Pressão Constante"
-        descricao = "Sempre no embate decisivo, pressiona os grandes."
-        cor_titulo = "#1DB954"
-        emoji = "🎤"
-    elif numero_2x0 >= 4:
-        perfil = "🔊 Dominador Absoluto - Aplica o 2x0"
-        descricao = "Quando sobe no palco, a plateia já sabe: vai ser arraso."
-        cor_titulo = "#7A1FA2"
-        emoji = "🔊"
-    elif numero_vitorias >= 1 and participacoes <= 3:  # NOVA CATEGORIA
-        perfil = "⚡ Vitorioso de Passagem - Impacto Imediato"
-        descricao = "Poucas aparições, mas quando veio, veio pra vencer. Deixou marca."
-        cor_titulo = "#FF6B00"  # Laranja forte
-        emoji = "⚡"
-    elif participacoes >= 9:
-        perfil = "📀 Guerreiro da Roda - Construção Diária"
-        descricao = "Presença que fortalece o coletivo, base do movimento."
-        cor_titulo = "#3498db"
-        emoji = "📀"
-    elif numero_finais >= 3:
-        perfil = "💿 Promessa Concretizada - Sangue de Finalista"
-        descricao = "Provou que tem o sangue, chegou onde poucos chegam."
-        cor_titulo = "#e74c3c"
-        emoji = "💿"
-    elif participacoes >= 4:
-        perfil = "🎚️ Voz em Ascensão - Crescendo no Ritmo"
-        descricao = "Frequência que aumenta, aprendizado em cada batalha."
-        cor_titulo = "#2ecc71"
-        emoji = "🎚️"
-    elif tem_participacao:
-        perfil = "💚 Semente na Roda - Brotando no Microfone"
-        descricao = "Já entrou na roda, construindo sua história no coletivo."
-        cor_titulo = "#1DB954"
-        emoji = "💚"
-    else:
-        perfil = "🎧 Presença no Radar - Olho no Talento"
-        descricao = "Nome no ranking, potencial sendo observado pelo coletivo."
-        cor_titulo = "#f39c12"
-        emoji = "🎧"
+    # Calcula participações de forma mais limpa
+    participacoes = 0
+    tipos_participacao = ['VITORIAS', 'VICES', 'SEMIFINAIS', 'SEGUNDA_FASE']
+    for tipo in tipos_participacao:
+        participacoes += int(detector.get_valor_mc(df, mc_selected, tipo))
     
-     # 3. CRIAR E EXIBIR O CARD (VERSÃO CORRIGIDA)
-    import streamlit.components.v1 as components
-    
-    card_html = f"""
-    <div style="
-        padding:24px;
-        border-radius:20px;
-        background: linear-gradient(145deg, #0f0f0f, #1a1a1a);
-        border: 2px solid {cor_titulo}55;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        height:380px;
-        font-family: Arial, sans-serif;
-    ">
-        <div style="text-align:center; font-size:36px; margin-bottom:10px;">
-            {emoji}
-        </div>
+    tem_participacao = participacoes > 0
         
-        <h3 style="
-            color:{cor_titulo};
-            margin-top:0;
-            margin-bottom:14px;
-            font-size:22px;
-            text-align:center;
-            font-weight:800;
-            line-height:1.2;
-        ">
-            {perfil}
-        </h3>
+           # 2. SISTEMA DE CLASSIFICAÇÃO COM LÍDER GARANTIDO COMO LENDA
+        # Verificar se é o LÍDER DO RANKING ATUAL
+        lider_do_ranking = df.sort_values("PTS", ascending=False).iloc[0]["MC"]
+        eh_lider = mc_selected == lider_do_ranking
         
-        <p style="
-            color:#bdbdbd;
-            font-style:italic;
-            text-align:center;
-            margin-bottom:28px;
-            font-size:15px;
-            line-height:1.5;
-            padding:0 8px;
-        ">
-            {descricao}
-        </p>
+        # LÓGICA DE CLASSIFICAÇÃO (LÍDER TEM PRIORIDADE ABSOLUTA)
+        if eh_lider:
+            perfil = "🏆 Líder Atual - Lenda Consagrada"
+            descricao = "Líder do ranking! Microfone que dita a lei, referência absoluta do circuito."
+            cor_titulo = "#FFD700"
+            emoji = "🏆"
+        elif numero_finais >= 8:
+            perfil = "🏆 Dono do Pódio - Lenda Consagrada"
+            descricao = "Microfone que dita a lei, referência absoluta do circuito."
+            cor_titulo = "#FFD700"
+            emoji = "🏆"
+        elif numero_finais >= 6:
+            perfil = "🎤 Voz da Final - Pressão Constante"
+            descricao = "Sempre no embate decisivo, pressiona os grandes."
+            cor_titulo = "#1DB954"
+            emoji = "🎤"
+        elif numero_2x0 >= 4:
+            perfil = "🔊 Dominador Absoluto - Aplica o 2x0"
+            descricao = "Quando sobe no palco, a plateia já sabe: vai ser arraso."
+            cor_titulo = "#7A1FA2"
+            emoji = "🔊"
+        elif numero_vitorias >= 1 and participacoes <= 3:  # NOVA CATEGORIA
+            perfil = "⚡ Vitorioso de Passagem - Impacto Imediato"
+            descricao = "Poucas aparições, mas quando veio, veio pra vencer. Deixou marca."
+            cor_titulo = "#FF6B00"  # Laranja forte
+            emoji = "⚡"
+        elif participacoes >= 9:
+            perfil = "📀 Guerreiro da Roda - Construção Diária"
+            descricao = "Presença que fortalece o coletivo, base do movimento."
+            cor_titulo = "#3498db"
+            emoji = "📀"
+        elif numero_finais >= 3:
+            perfil = "💿 Promessa Concretizada - Sangue de Finalista"
+            descricao = "Provou que tem o sangue, chegou onde poucos chegam."
+            cor_titulo = "#e74c3c"
+            emoji = "💿"
+        elif participacoes >= 4:
+            perfil = "🎚️ Voz em Ascensão - Crescendo no Ritmo"
+            descricao = "Frequência que aumenta, aprendizado em cada batalha."
+            cor_titulo = "#2ecc71"
+            emoji = "🎚️"
+        elif tem_participacao:
+            perfil = "💚 Semente na Roda - Brotando no Microfone"
+            descricao = "Já entrou na roda, construindo sua história no coletivo."
+            cor_titulo = "#1DB954"
+            emoji = "💚"
+        else:
+            perfil = "🎧 Presença no Radar - Olho no Talento"
+            descricao = "Nome no ranking, potencial sendo observado pelo coletivo."
+            cor_titulo = "#f39c12"
+            emoji = "🎧"
         
+         # 3. CRIAR E EXIBIR O CARD (VERSÃO CORRIGIDA)
+        import streamlit.components.v1 as components
+        
+        card_html = f"""
         <div style="
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 18px;
-            margin-top: 20px;
+            padding:24px;
+            border-radius:20px;
+            background: linear-gradient(145deg, #0f0f0f, #1a1a1a);
+            border: 2px solid {cor_titulo}55;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            height:380px;
+            font-family: Arial, sans-serif;
         ">
-            <div style="text-align:center;">
-                <div style="font-size:14px;color:#aaa;margin-bottom:6px;font-weight:600;">🎤 FINAIS</div>
-                <div style="font-size:32px;font-weight:bold;color:#1DB954;line-height:1;">{numero_finais}</div>
-                <div style="font-size:12px;color:#777;margin-top:4px;">(VITÓRIAS + VICES)</div>
+            <div style="text-align:center; font-size:36px; margin-bottom:10px;">
+                {emoji}
             </div>
             
-            <div style="text-align:center;">
-                <div style="font-size:14px;color:#aaa;margin-bottom:6px;font-weight:600;">🔊 2x0</div>
-                <div style="font-size:32px;font-weight:bold;color:#7A1FA2;line-height:1;">{numero_2x0}</div>
-                <div style="font-size:12px;color:#777;margin-top:4px;">DOMINÂNCIA</div>
+            <h3 style="
+                color:{cor_titulo};
+                margin-top:0;
+                margin-bottom:14px;
+                font-size:22px;
+                text-align:center;
+                font-weight:800;
+                line-height:1.2;
+            ">
+                {perfil}
+            </h3>
+            
+            <p style="
+                color:#bdbdbd;
+                font-style:italic;
+                text-align:center;
+                margin-bottom:28px;
+                font-size:15px;
+                line-height:1.5;
+                padding:0 8px;
+            ">
+                {descricao}
+            </p>
+            
+            <div style="
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 18px;
+                margin-top: 20px;
+            ">
+                <div style="text-align:center;">
+                    <div style="font-size:14px;color:#aaa;margin-bottom:6px;font-weight:600;">🎤 FINAIS</div>
+                    <div style="font-size:32px;font-weight:bold;color:#1DB954;line-height:1;">{numero_finais}</div>
+                    <div style="font-size:12px;color:#777;margin-top:4px;">(VITÓRIAS + VICES)</div>
+                </div>
+                
+                <div style="text-align:center;">
+                    <div style="font-size:14px;color:#aaa;margin-bottom:6px;font-weight:600;">🔊 2x0</div>
+                    <div style="font-size:32px;font-weight:bold;color:#7A1FA2;line-height:1;">{numero_2x0}</div>
+                    <div style="font-size:12px;color:#777;margin-top:4px;">DOMINÂNCIA</div>
+                </div>
+                
+                <div style="text-align:center;">
+                    <div style="font-size:14px;color:#aaa;margin-bottom:6px;font-weight:600;">🏆 VITÓRIAS</div>
+                    <div style="font-size:32px;font-weight:bold;color:#FFD700;line-height:1;">{numero_vitorias}</div>
+                    <div style="font-size:12px;color:#777;margin-top:4px;">NO TOPO</div>
+                </div>
+                
+                <div style="text-align:center;">
+                    <div style="font-size:14px;color:#aaa;margin-bottom:6px;font-weight:600;">📀 EDIÇÕES</div>
+                    <div style="font-size:32px;font-weight:bold;color:#3498db;line-height:1;">{participacoes}</div>
+                    <div style="font-size:12px;color:#777;margin-top:4px;">PRESENÇAS</div>
+                </div>
             </div>
             
-            <div style="text-align:center;">
-                <div style="font-size:14px;color:#aaa;margin-bottom:6px;font-weight:600;">🏆 VITÓRIAS</div>
-                <div style="font-size:32px;font-weight:bold;color:#FFD700;line-height:1;">{numero_vitorias}</div>
-                <div style="font-size:12px;color:#777;margin-top:4px;">NO TOPO</div>
-            </div>
-            
-            <div style="text-align:center;">
-                <div style="font-size:14px;color:#aaa;margin-bottom:6px;font-weight:600;">📀 EDIÇÕES</div>
-                <div style="font-size:32px;font-weight:bold;color:#3498db;line-height:1;">{participacoes}</div>
-                <div style="font-size:12px;color:#777;margin-top:4px;">PRESENÇAS</div>
+            <div style="
+                margin-top:28px;
+                padding-top:18px;
+                border-top:1px solid #333;
+                text-align:center;
+            ">
+                <div style="font-size:13px;color:#888;font-style:italic;font-weight:500;">
+                    {mc_selected} • Larga o Verbo {ano_selecionado}
+                </div>
             </div>
         </div>
+        """
         
-        <div style="
-            margin-top:28px;
-            padding-top:18px;
-            border-top:1px solid #333;
-            text-align:center;
-        ">
-            <div style="font-size:13px;color:#888;font-style:italic;font-weight:500;">
-                {mc_selected} • Larga o Verbo {ano_selecionado}
-            </div>
-        </div>
-    </div>
-    """
-    
-    # 4. EXIBIR O CARD - NOME DA VARIÁVEL CORRIGIDO
-    components.html(card_html, height=420)
+        # 4. EXIBIR O CARD - NOME DA VARIÁVEL CORRIGIDO
+        components.html(card_html, height=420)
 
 # ─────────────────────────────────────────────
 # ─────────────────────────────────────────────
@@ -801,6 +801,7 @@ components.html(
     """,
     height=120
 )
+
 
 
 
