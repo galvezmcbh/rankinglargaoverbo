@@ -657,7 +657,7 @@ if st.query_params.get("page") == "perfis":
     # Aqui você pode mostrar os perfis DENTRO do próprio app.py
     # Ou usar um redirect
     st.markdown('<meta http-equiv="refresh" content="0; url=./1_Perfis_dos_MCs">', unsafe_allow_html=True)
-📱 TESTE RÁPIDO:
+  TESTE RÁPIDO:
 # ─────────────────────────────────────────────
 # 🔗 BOTÕES CENTRALIZADOS (HTML PURO)
 # ─────────────────────────────────────────────
@@ -703,6 +703,7 @@ components.html(
     """,
     height=120
 )
+
 
 
 
