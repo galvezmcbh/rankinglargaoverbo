@@ -2,7 +2,115 @@ import streamlit as st
 import pandas as pd
 import os
 import re
+# ─────────────────────────────────────────────
+# 🚀 CACHE AVANÇADO PARA PERFORMANCE
+# ─────────────────────────────────────────────
 
+@st.cache_data(ttl=7200, show_spinner="Carregando dados do ranking...")
+def carregar_todos_dados():
+    """
+    Carrega TODOS os dados de uma vez com cache.
+    Retorna um dicionário {ano: DataFrame}
+    """
+    dados_por_ano = {}
+    
+    for ano in [2024, 2025]:  # Ou detecte automaticamente
+        try:
+            arquivo = f"RANKING_LARGA_O_VERBO_{ano}.xlsx"
+            df = pd.read_excel(arquivo)
+            df.columns = df.columns.str.strip()
+            df.fillna(0, inplace=True)
+            
+            # Garantir que Ranking e PTS são numéricos
+            df["Ranking"] = pd.to_numeric(df["Ranking"], errors='coerce')
+            df["PTS"] = pd.to_numeric(df["PTS"], errors='coerce')
+            
+            dados_por_ano[ano] = df.sort_values("PTS", ascending=False)
+            
+        except Exception as e:
+            st.error(f"Erro ao carregar {ano}: {str(e)}")
+    
+    return dados_por_ano
+
+@st.cache_data(ttl=3600)
+def calcular_todas_metricas_uma_vez(dados_por_ano, ano):
+    """
+    Calcula TODAS as métricas de TODOS os MCs de uma vez (cacheado).
+    Retorna um dicionário {nome_mc: metricas} para rápido acesso.
+    """
+    if ano not in dados_por_ano:
+        return {}
+    
+    df = dados_por_ano[ano]
+    metricas_por_mc = {}
+    
+    for _, row in df.iterrows():
+        mc_nome = row["MC"]
+        metricas = {
+            "nome": mc_nome,
+            "pontos": int(row["PTS"]) if pd.notna(row.get("PTS")) else 0,
+            "ranking": int(row["Ranking"]) if pd.notna(row.get("Ranking")) else None,
+            "anos": []  # Será preenchido depois
+        }
+        
+        # Detectar colunas de resultados UMA ÚNICA VEZ
+        for prefixo, nome_amigavel in [("VT", "vitórias"), ("VC", "vices"), ("SM", "semifinais"), ("2x0", "2x0")]:
+            valor = 0
+            for col in df.columns:
+                if str(col).upper().startswith(prefixo):
+                    val = row.get(col, 0)
+                    if pd.notna(val):
+                        valor = int(val)
+                    break
+            metricas[nome_amigavel] = valor
+        
+        metricas["finais"] = metricas.get("vitórias", 0) + metricas.get("vices", 0)
+        metricas_por_mc[mc_nome] = metricas
+    
+    return metricas_por_mc
+
+@st.cache_data(ttl=86400)  # 24 horas (textos raramente mudam)
+def gerar_textos_todos_mcs(metricas_por_mc):
+    """
+    Gera TODOS os textos de uma vez para cache.
+    """
+    textos_por_mc = {}
+    
+    for mc_nome, metricas in metricas_por_mc.items():
+        # 1. Primeiro verificar se tem texto personalizado
+        if mc_nome in TEXTOS_PERSONALIZADOS:
+            textos_por_mc[mc_nome] = TEXTOS_PERSONALIZADOS[mc_nome]
+            continue
+        
+        # 2. Gerar texto automático
+        textos = []
+        
+        if metricas["pontos"] > 40:
+            textos.append(f"**Potência do ranking** com **{metricas['pontos']} pontos** acumulados.")
+        elif metricas["pontos"] > 20:
+            textos.append(f"Presença sólida com **{metricas['pontos']} pontos** no histórico.")
+        else:
+            textos.append(f"**{metricas['pontos']} pontos** registrados no circuito.")
+        
+        if metricas["finais"] >= 5:
+            textos.append(f"Finalista experiente com **{metricas['finais']} finais** disputadas.")
+        elif metricas["finais"] >= 1:
+            textos.append(f"Já chegou na final **{metricas['finais']} vez(es)**, mostrando potencial.")
+        
+        if metricas.get("2x0", 0) >= 3:
+            textos.append(f"Estilo dominante com **{metricas['2x0']} vitórias 2x0**.")
+        
+        if metricas.get("vitórias", 0) >= 3:
+            textos.append(f"Vencedor nato com **{metricas['vitórias']} conquistas**.")
+        
+        if metricas["ranking"] == 1:
+            textos.append("**Já liderou o ranking**, mostrando superioridade técnica.")
+        elif metricas["ranking"] and metricas["ranking"] <= 3:
+            textos.append(f"Já esteve no **top {metricas['ranking']}** do ranking.")
+        
+        textos_por_mc[mc_nome] = " ".join(textos) if textos else "Em construção no Larga o Verbo, escrevendo sua história."
+    
+    return textos_por_mc
 # ─────────────────────────────────────────────
 # CONFIGURAÇÃO DA PÁGINA
 # ─────────────────────────────────────────────
