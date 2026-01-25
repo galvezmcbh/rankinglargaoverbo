@@ -247,13 +247,7 @@ with col_titulo:
     st.subheader("🧬 Análise Individual")
 with col_botao:
     if st.button("📋 Ver Perfis Completos", use_container_width=True):
-        # Navegação via JavaScript
-        st.components.v1.html("""
-            <script>
-                window.location.href = "./1_Perfis_dos_MCs";
-            </script>
-        """, height=0)
-
+        st.query_params["page"] = "perfis"
 # ←←←←←←←←←←←←← **ESTE SELECTBOX DEVE EXISTIR AQUI!** ←←←←←←←←←←←←←
 mc_selected = st.selectbox(
     "Selecione um MC",
@@ -704,6 +698,7 @@ components.html(
     """,
     height=120
 )
+
 
 
 
