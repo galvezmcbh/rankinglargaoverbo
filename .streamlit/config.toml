@@ -1,8 +1,18 @@
+# .streamlit/config.toml
 [server]
 enableCORS = false
+maxUploadSize = 200
 
 [browser]
+serverAddress = "localhost"
 gatherUsageStats = false
 
 [client]
 showSidebarNavigation = false
+
+[theme]
+primaryColor = "#1DB954"
+backgroundColor = "#0f0f0f"
+secondaryBackgroundColor = "#1a1a1a"
+textColor = "#eaeaea"
+font = "sans serif"
