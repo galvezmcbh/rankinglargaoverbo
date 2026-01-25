@@ -6,7 +6,110 @@ import streamlit.components.v1 as components
 import os
 import re
 import streamlit as st
+# ─────────────────────────────────────────────
+# 🎯 DETECTOR CENTRALIZADO DE COLUNAS
+# ─────────────────────────────────────────────
+class DetectorColunas:
+    """
+    CLASSE ÚNICA para detectar e mapear todas as colunas do ranking.
+    Substitui TODAS as detecções espalhadas pelo código.
+    """
+    
+    # Padrões de busca organizados por prioridade
+    PADROES = {
+        'VITORIAS': ['VT', 'VITÓRIA', 'VITÓRIAS', 'VITORIA'],
+        'VICES': ['VC', 'VICE', 'VICES'],
+        'SEMIFINAIS': ['SM', 'SEMIFINAL', 'SEMIFINAIS', 'SF'],
+        'QUARTAS': ['QF', 'QUARTA', 'QUARTAS', 'QUARTAFINAL'],
+        'DOIS_X_ZERO': ['2X0', '2-0', 'DOIS A ZERO', '2X0'],
+        'SEGUNDA_FASE': ['2ªF', '2AF', 'SEGUNDA FASE', 'SEGUNDAFASE'],
+        'PONTOS': ['PTS', 'PONTOS', 'PONTUAÇÃO', 'SCORE', 'PONTUACAO'],
+        'EDICOES': ['EDIÇÕES', 'PARTICIPAÇÕES', 'APARIÇÕES', 'PARTICIPACOES']
+    }
+    
+    @staticmethod
+    def detectar_todas(df):
+        """
+        Retorna dicionário {tipo: nome_da_coluna_real} para todas as colunas detectadas.
+        Exemplo: {'VITORIAS': 'VT (4)', 'VICES': 'VC (3)'}
+        """
+        resultado = {}
+        colunas_processadas = set()
+        
+        for tipo, padroes in DetectorColunas.PADROES.items():
+            for padrao in padroes:
+                encontrou = False
+                for coluna_real in df.columns:
+                    if coluna_real in colunas_processadas:
+                        continue
+                    
+                    col_str = str(coluna_real).upper().strip()
+                    if padrao in col_str:
+                        resultado[tipo] = coluna_real
+                        colunas_processadas.add(coluna_real)
+                        encontrou = True
+                        break
+                
+                if encontrou:
+                    break
+        
+        return resultado
+    
+    @staticmethod
+    def get_nome_amigavel(tipo_coluna):
+        """Converte tipo técnico para nome amigável (ex: 'VITORIAS' → 'Vitórias')."""
+        traducao = {
+            'VITORIAS': 'Vitórias',
+            'VICES': 'Vices', 
+            'SEMIFINAIS': 'Semifinais',
+            'QUARTAS': 'Quartas',
+            'DOIS_X_ZERO': 'Vitórias 2x0',
+            'SEGUNDA_FASE': '2ª Fase',
+            'PONTOS': 'Pontos',
+            'EDICOES': 'Edições'
+        }
+        return traducao.get(tipo_coluna, tipo_coluna)
+    
+    @staticmethod  
+    def get_colunas_para_grafico(df, tipos=None):
+        """
+        Retorna (colunas_reais, nomes_amigaveis) para gráficos.
+        Se 'tipos' for None, usa ordem padrão: Vitorias, Vices, Semifinais, 2x0
+        """
+        detectadas = DetectorColunas.detectar_todas(df)
+        
+        # Ordem padrão para gráficos (pode personalizar)
+        if tipos is None:
+            tipos = ['VITORIAS', 'VICES', 'SEMIFINAIS', 'DOIS_X_ZERO']
+        
+        colunas_grafico = []
+        nomes_amigaveis = []
+        
+        for tipo in tipos:
+            if tipo in detectadas:
+                colunas_grafico.append(detectadas[tipo])
+                nomes_amigaveis.append(DetectorColunas.get_nome_amigavel(tipo))
+        
+        return colunas_grafico, nomes_amigaveis
+    
+    @staticmethod
+    def get_valor_mc(df, mc_nome, tipo_coluna):
+        """Pega o valor de uma coluna específica para um MC."""
+        detectadas = DetectorColunas.detectar_todas(df)
+        
+        if tipo_coluna not in detectadas:
+            return 0
+        
+        coluna_real = detectadas[tipo_coluna]
+        mc_data = df[df['MC'] == mc_nome]
+        
+        if mc_data.empty:
+            return 0
+        
+        valor = mc_data.iloc[0].get(coluna_real, 0)
+        return float(valor) if not pd.isna(valor) else 0
 
+# ─────────────────────────────────────────────
 def card_lv(titulo, valor, cor):
     st.markdown(
         f"""
@@ -185,31 +288,22 @@ lider_atual = (
     .iloc[0]["MC"]
 )
 
-# 2. DETECTAR COLUNA DE VITÓRIAS automaticamente
-coluna_vitorias = None
-for col in df.columns:
-    if str(col).strip().upper().startswith('VT'):
-        coluna_vitorias = col
-        break
+# 2. DETECTAR COLUNAS usando a classe centralizada
+detector = DetectorColunas()
+colunas_detectadas = detector.detectar_todas(df)
 
-# 3. DETECTAR COLUNA DE VITÓRIAS 2x0 automaticamente  
-coluna_2x0 = None
-for col in df.columns:
-    if '2x0' in str(col).lower():
-        coluna_2x0 = col
-        break
+# 3. Calcular métricas com colunas detectadas
+coluna_vitorias = colunas_detectadas.get('VITORIAS')
+coluna_2x0 = colunas_detectadas.get('DOIS_X_ZERO')
 
-# 4. Calcular métricas com colunas detectadas
-if coluna_vitorias:
+mais_vitorias = "—"
+if coluna_vitorias and coluna_vitorias in df.columns:
     mais_vitorias = df.loc[df[coluna_vitorias].idxmax()]["MC"]
-else:
-    mais_vitorias = "—"
 
+mais_2x0 = "—"
 if coluna_2x0 and coluna_2x0 in df.columns:
     mais_2x0 = df.loc[df[coluna_2x0].idxmax()]["MC"]
-else:
-    mais_2x0 = "—"
-
+    
 # 5. Mantenha a métrica de vices (não mudou entre anos)
 mais_vices = (
     df.loc[df["VC (3)"].idxmax()]["MC"]
@@ -230,19 +324,6 @@ else:
 # Verifica se temos dados
 if df_historico.empty:
     st.warning("⚠️ Nenhum dado histórico foi carregado.")
-
-# ─────────────────────────────────────────────
-# MAPEAMENTO DE INDICADORES
-# ─────────────────────────────────────────────
-result_map = {
-    "VT (4)": "Vitórias",
-    "VC (3)": "Vices",
-    "SM (2)": "Semifinais",
-    "2x0 (1)": "Vitórias 2x0",
-    "2x0": "Vitórias 2x0"
-}
-
-ordem_resultados = list(result_map.values())
 
 # ─────────────────────────────────────────────
 # MÉTRICAS DO TOPO (5 COLUNAS)
@@ -359,35 +440,25 @@ elif total_edicoes >= 3:
 else:
     perfil_mc = "Participação pontual"
 
-# ── Gráfico de indicadores (DETECÇÃO FLEXÍVEL)
+# ── Gráfico de indicadores (USANDO DETECTOR CENTRALIZADO)
 with col1:
-    # 1. ENCONTRAR COLUNAS REAIS usando o mapeamento original
-    colunas_encontradas = []
-    nomes_amigaveis = []
+    # 1. USAR DETECTOR (reutiliza o mesmo detector criado antes)
+    # Se detector não existir nesta seção, crie novamente:
+    if 'detector' not in locals():
+        detector = DetectorColunas()
     
-    for col_original, nome_amigavel in result_map.items():
-        if col_original in df.columns:
-            colunas_encontradas.append(col_original)
-            nomes_amigaveis.append(nome_amigavel)
-        else:
-            # Se não encontrar, tenta variações
-            for col_real in df.columns:
-                # Procura por padrões similares
-                if 'VT' in col_original and 'VT' in str(col_real):
-                    colunas_encontradas.append(col_real)
-                    nomes_amigaveis.append('Vitórias')
-                    break
-                elif col_original in str(col_real):
-                    colunas_encontradas.append(col_real)
-                    nomes_amigaveis.append(nome_amigavel)
-                    break
+    # 2. PEGAR COLUNAS PARA GRÁFICO
+    colunas_grafico, nomes_amigaveis = detector.get_colunas_para_grafico(df)
     
-    # 2. CRIAR GRÁFICO (MANTENDO INFORMAÇÃO ORIGINAL)
-    if colunas_encontradas:
+    # 3. CRIAR GRÁFICO
+    if colunas_grafico:
+        # Pega valores do MC selecionado
+        valores = [mc_row.get(col, 0) for col in colunas_grafico]
+        
         fig_mc = px.bar(
             pd.DataFrame({
                 "Resultado": nomes_amigaveis,
-                "Quantidade": [mc_row[c] for c in colunas_encontradas]
+                "Quantidade": valores
             }),
             x="Resultado",
             y="Quantidade",
@@ -395,51 +466,36 @@ with col1:
             color_discrete_sequence=["#7A1FA2"]
         )
         
-        # 3. MANTÉM A INFORMAÇÃO ORIGINAL ABAIXO DO GRÁFICO
         st.plotly_chart(fig_mc, use_container_width=True)
         
-        # Esta parte mostra a informação interna (controle)
-        st.caption(f"🎯 Colunas detectadas: {', '.join(colunas_encontradas)}")
+        # Mostra colunas reais usadas (opcional, para debug)
+        st.caption(f"🎯 Colunas usadas: {', '.join(colunas_grafico)}")
     else:
         st.warning("Nenhuma coluna de desempenho encontrada.")
 
 # ── CARD FINAL: Perfil Poético do MC
 with col2:
-    # 1. CALCULAR AS NOVAS MÉTRICAS
-    coluna_vt = None
-    for col in df.columns:
-        if str(col).strip().upper().startswith('VT'):
-            coluna_vt = col
-            break
-    
-    numero_vitorias = int(mc_row.get(coluna_vt, 0)) if coluna_vt else 0
-    numero_vices = int(mc_row.get("VC (3)", 0))
-    numero_finais = numero_vitorias + numero_vices
-    
-    coluna_2x0 = None
-    for col in df.columns:
-        if '2x0' in str(col).lower():
-            coluna_2x0 = col
-            break
-    numero_2x0 = int(mc_row.get(coluna_2x0, 0)) if coluna_2x0 else 0
-    
-    participacoes = 0
-    for col in ["VT", "VC", "SM", "2ªF"]:
-        for col_real in df.columns:
-            if col in str(col_real):
-                valor = mc_row.get(col_real, 0)
-                participacoes += int(valor) if not pd.isna(valor) else 0
-    
-    tem_participacao = False
-    for col in ["VT", "VC", "SM", "2ªF"]:
-        for col_real in df.columns:
-            if col in str(col_real):
-                valor = mc_row.get(col_real, 0)
-                if not pd.isna(valor) and int(valor) > 0:
-                    tem_participacao = True
-                    break
-        if tem_participacao:
-            break
+   # 1. CALCULAR AS NOVAS MÉTRICAS (USANDO DETECTOR)
+# Reutiliza ou cria detector
+if 'detector' not in locals():
+    detector = DetectorColunas()
+    colunas_detectadas = detector.detectar_todas(df)
+elif 'colunas_detectadas' not in locals():
+    colunas_detectadas = detector.detectar_todas(df)
+
+# Usa valores do detector
+numero_vitorias = int(detector.get_valor_mc(df, mc_selected, 'VITORIAS'))
+numero_vices = int(detector.get_valor_mc(df, mc_selected, 'VICES'))
+numero_finais = numero_vitorias + numero_vices
+numero_2x0 = int(detector.get_valor_mc(df, mc_selected, 'DOIS_X_ZERO'))
+
+# Calcula participações de forma mais limpa
+participacoes = 0
+tipos_participacao = ['VITORIAS', 'VICES', 'SEMIFINAIS', 'SEGUNDA_FASE']
+for tipo in tipos_participacao:
+    participacoes += int(detector.get_valor_mc(df, mc_selected, tipo))
+
+tem_participacao = participacoes > 0
     
        # 2. SISTEMA DE CLASSIFICAÇÃO COM LÍDER GARANTIDO COMO LENDA
     # Verificar se é o LÍDER DO RANKING ATUAL
@@ -599,31 +655,14 @@ mc_compare = st.multiselect(
 )
 
 if len(mc_compare) >= 2:
-    # 1. DETECTAR COLUNAS DINAMICAMENTE (igual ao gráfico individual)
-    colunas_para_comparar = []
-    nomes_amigaveis = []
+    # 1. DETECTAR COLUNAS usando detector centralizado
+    if 'detector' not in locals():
+        detector = DetectorColunas()
     
-    # Mapeamento flexível (mesma lógica do gráfico individual)
-    mapeamento_flex = {
-        'Vitórias': ['VT', 'VITÓRIA', 'VITÓRIAS'],
-        'Vices': ['VC', 'VICE', 'VICES'],
-        'Semifinais': ['SM', 'SEMIFINAL', 'SEMIFINAIS'],
-        '2ª Fase': ['2ªF', '2ª FASE', 'SEGUNDA FASE'],
-        'Vitórias 2x0': ['2x0', '2X0']
-    }
-    
-    # Encontrar colunas reais
-    for nome_amigavel, padroes in mapeamento_flex.items():
-        encontrou = False
-        for padrao in padroes:
-            for coluna_real in df.columns:
-                if padrao in str(coluna_real).upper():
-                    colunas_para_comparar.append(coluna_real)
-                    nomes_amigaveis.append(nome_amigavel)
-                    encontrou = True
-                    break
-            if encontrou:
-                break
+    colunas_para_comparar, nomes_amigaveis = detector.get_colunas_para_grafico(
+        df, 
+        tipos=['VITORIAS', 'VICES', 'SEMIFINAIS', 'DOIS_X_ZERO']
+    )
     
     if colunas_para_comparar:
         # 2. PREPARAR DADOS
@@ -762,6 +801,7 @@ components.html(
     """,
     height=120
 )
+
 
 
 
