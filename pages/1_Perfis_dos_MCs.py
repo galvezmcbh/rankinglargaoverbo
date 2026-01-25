@@ -60,7 +60,7 @@ body { background-color:#0f0f0f; color:#eaeaea; }
 
 REDES_SOCIAIS = {
     "Galvez": [
-        {"tipo": "Instagram", "url": "https://instagram.com/galvezmcbh", "emoji": "📱"}
+        {"tipo": "Instagram", "url": "https://instagram.com/galvez_mc", "emoji": "📱"}
     ],
     "KVL": [
         {"tipo": "Instagram", "url": "https://instagram.com/kvl.mc", "emoji": "📱"}
