@@ -7,16 +7,6 @@ import os
 import re
 import streamlit as st
 
-st.sidebar.markdown("### 🐍 VERIFICAÇÃO PYTHON")
-st.sidebar.write(f"**Versão Python:** {sys.version}")
-st.sidebar.write(f"**Versão Streamlit:** {st.__version__}")
-
-# Verificar compatibilidade
-if sys.version_info >= (3, 13):
-    st.sidebar.error("⚠️ Python 3.13 pode ter problemas!")
-    st.sidebar.write("Recomendo mudar para Python 3.10 nas settings")
-else:
-    st.sidebar.success(f"✅ Python {sys.version_info.major}.{sys.version_info.minor} OK")
 def card_lv(titulo, valor, cor):
     st.markdown(
         f"""
@@ -695,6 +685,7 @@ components.html(
     """,
     height=120
 )
+
 
 
 
