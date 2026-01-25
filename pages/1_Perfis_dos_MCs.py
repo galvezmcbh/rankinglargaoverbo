@@ -259,30 +259,7 @@ if df_ano is not None:
                         for rede in REDES_SOCIAIS[row["MC"]]:
                             st.markdown(f"{rede['emoji']} [{rede['tipo']}]({rede['url']})")
     
-    # Botão para adicionar redes sociais
-    st.divider()
-    with st.expander("✏️ Como adicionar redes sociais de um MC", expanded=False):
-        st.markdown("""
-        **Para adicionar redes sociais de um MC:**
-        
-        1. **Encontre o nome exato** do MC como aparece no ranking
-        2. **No código acima**, localize o dicionário `REDES_SOCIAIS`
-        3. **Adicione uma nova entrada** seguindo este formato:
-        
-        ```python
-        "NOME DO MC": [
-            {"tipo": "Instagram", "url": "https://instagram.com/usuario", "emoji": "📱"},
-            {"tipo": "YouTube", "url": "https://youtube.com/@canal", "emoji": "▶️"},
-            {"tipo": "TikTok", "url": "https://tiktok.com/@usuario", "emoji": "🎵"}
-        ]
-        ```
-        
-        **Dica:** Você pode adicionar quantas redes sociais quiser para cada MC!
-        """)
-        
-else:
-    st.error("Não foi possível carregar os dados do ranking. Verifique se os arquivos Excel existem.")
-
+    
 # ─────────────────────────────────────────────
 # BOTÃO VOLTAR
 # ─────────────────────────────────────────────
