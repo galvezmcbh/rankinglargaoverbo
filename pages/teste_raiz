@@ -1,3 +1,0 @@
-import streamlit as st
-st.title("✅ TESTE CRIADO VIA GITHUB WEB")
-st.write("Se isto funcionar, o problema era de criação de pasta.")
