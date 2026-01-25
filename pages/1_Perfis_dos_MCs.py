@@ -226,7 +226,7 @@ if df_ano is not None:
                     st.write(gerar_texto_desempenho(metricas))
                     
                    # Redes sociais (se configuradas) - NOVA VERSÃO COM BOTÕES BONITOS
-      if row["MC"] in REDES_SOCIAIS:
+        if row["MC"] in REDES_SOCIAIS:
     st.divider()
     st.markdown("#### 🔗 Conecte-se com o artista:")
     
