@@ -141,22 +141,21 @@ def carregar_dados_ano(ano):
         return None
 
 def calcular_metricas_mc(mc_nome, df):
-    """Calcula métricas resumidas para um MC"""
+    """Calcula métricas resumidas para um MC - VERSÃO SUPER ROBUSTA"""
     if df is None or mc_nome not in df["MC"].values:
         return None
     
     dados_mc = df[df["MC"] == mc_nome].iloc[0]
     
-    # Detectar colunas automaticamente
     metricas = {
         "nome": mc_nome,
         "pontos": int(dados_mc["PTS"]) if pd.notna(dados_mc.get("PTS")) else 0,
         "ranking": int(dados_mc["Ranking"]) if pd.notna(dados_mc.get("Ranking")) else None,
-        "anos": []  # Será preenchido depois
+        "anos": []
     }
     
-    # Detectar colunas de resultados
-    for prefixo, nome_amigavel in [("VT", "vitórias"), ("VC", "vices"), ("SM", "semifinais"), ("2x0", "2x0 (1)")]:
+    # 1. Para VT, VC, SM
+    for prefixo, nome_amigavel in [("VT", "vitórias"), ("VC", "vices"), ("SM", "semifinais")]:
         valor = 0
         for col in df.columns:
             if str(col).upper().startswith(prefixo):
@@ -166,7 +165,30 @@ def calcular_metricas_mc(mc_nome, df):
                 break
         metricas[nome_amigavel] = valor
     
-    # Calcular finais
+    # 2. 🔥 DETECÇÃO COMPLETA DO 2x0
+    valor_2x0 = 0
+    padroes_busca = ["2X0", "2-0", "DOISXZERO", "DOISAZERO", "2X0(1)", "2X0 (1)"]
+    
+    for col in df.columns:
+        col_nome = str(col).upper().replace(" ", "").replace("-", "").replace("(", "").replace(")", "")
+        
+        for padrao in padroes_busca:
+            padrao_limpo = padrao.replace(" ", "").replace("-", "").replace("(", "").replace(")", "")
+            
+            if padrao_limpo in col_nome:
+                val = dados_mc.get(col, 0)
+                if pd.notna(val):
+                    try:
+                        # Converte qualquer formato para inteiro
+                        valor_2x0 = int(float(val))
+                    except:
+                        valor_2x0 = 0
+                break  # Para o loop interno
+        
+        if valor_2x0 > 0:
+            break  # Para o loop externo se encontrou
+    
+    metricas["2x0"] = valor_2x0
     metricas["finais"] = metricas.get("vitórias", 0) + metricas.get("vices", 0)
     
     return metricas
