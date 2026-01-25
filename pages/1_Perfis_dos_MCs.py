@@ -208,7 +208,7 @@ def gerar_texto_desempenho(metricas):
     return " ".join(textos) if textos else "Em construção no Larga o Verbo, escrevendo sua história."
 
 # ─────────────────────────────────────────────
-# INTERFACE PRINCIPAL
+# INTERFACE PRINCIPAL - VERSÃO OTIMIZADA
 # ─────────────────────────────────────────────
 st.title("📋 Perfis dos MCs")
 st.caption("Conheça os artistas do Larga o Verbo • Clique em cada MC para ver detalhes")
@@ -221,8 +221,31 @@ ano_selecionado = st.selectbox(
     index=len(anos_disponiveis)-1
 )
 
-# Carregar dados
-df_ano = carregar_dados_ano(ano_selecionado)
+# 🚀 CARREGAMENTO OTIMIZADO COM CACHE
+# 1. Carrega TODOS os dados de uma vez
+with st.spinner("📊 Preparando dados..."):
+    dados_por_ano = carregar_todos_dados()
+    
+    if ano_selecionado not in dados_por_ano:
+        st.error(f"Dados para {ano_selecionado} não encontrados!")
+        st.stop()
+    
+    df_ano = dados_por_ano[ano_selecionado]
+
+# 2. Calcula TODAS as métricas de uma vez (cacheado)
+metricas_por_mc = calcular_todas_metricas_uma_vez(dados_por_ano, ano_selecionado)
+
+# 3. Gera TODOS os textos de uma vez (cacheado)
+textos_por_mc = gerar_textos_todos_mcs(metricas_por_mc)
+
+# Estatísticas rápidas (agora instantâneas)
+col_stats1, col_stats2, col_stats3 = st.columns(3)
+with col_stats1:
+    st.metric("Total de MCs", len(df_ano))
+with col_stats2:
+    st.metric("Maior Pontuação", int(df_ano["PTS"].max()))
+with col_stats3:
+    st.metric("Média de Pontos", f"{df_ano['PTS'].mean():.1f}")
 
 if df_ano is not None:
     # Estatísticas rápidas
