@@ -197,7 +197,7 @@ if df_ano is not None:
     
     st.divider()
     
-    # Lista de MCs em duas colunas
+       # Lista de MCs em duas colunas
     st.subheader(f"🏆 Ranking {ano_selecionado}")
     
     # Dividir MCs em duas colunas
@@ -224,55 +224,118 @@ if df_ano is not None:
                     st.divider()
                     st.markdown("#### 🎤 Desempenho")
                     st.write(gerar_texto_desempenho(metricas))
-                    # Redes sociais (se configuradas) - NOVA VERSÃO COM BOTÕES BONITOS
-if row["MC"] in REDES_SOCIAIS:
-    st.divider()
-    st.markdown("#### 🔗 Conecte-se com o artista:")
+                    
+                    # Redes sociais (se configuradas)
+                    if row["MC"] in REDES_SOCIAIS:
+                        st.divider()
+                        st.markdown("#### 🔗 Conecte-se com o artista:")
+                        
+                        # Criar botões para cada rede social
+                        col_redes = st.columns(len(REDES_SOCIAIS[row["MC"]]))
+                        
+                        for idx, rede in enumerate(REDES_SOCIAIS[row["MC"]]):
+                            with col_redes[idx]:
+                                # Botão estilizado
+                                st.markdown(
+                                    f"""
+                                    <a href="{rede['url']}" target="_blank" style="text-decoration: none;">
+                                        <div style="
+                                            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+                                            border: 1px solid #7A1FA255;
+                                            border-radius: 10px;
+                                            padding: 12px 8px;
+                                            text-align: center;
+                                            color: white;
+                                            cursor: pointer;
+                                            transition: all 0.3s ease;
+                                            height: 100%;
+                                        "
+                                        onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(122, 31, 162, 0.3)';"
+                                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';"
+                                        >
+                                            <div style="font-size: 24px; margin-bottom: 6px;">
+                                                {rede['emoji']}
+                                            </div>
+                                            <div style="font-size: 12px; font-weight: 600;">
+                                                {rede['tipo']}
+                                            </div>
+                                        </div>
+                                    </a>
+                                    """,
+                                    unsafe_allow_html=True
+                                )
     
-    # Criar botões para cada rede social
-    col_redes = st.columns(len(REDES_SOCIAIS[row["MC"]]))
+    # 🔴 🔴 🔴 AQUI ESTAVA FALTANDO - COLUNA DIREITA 🔴 🔴 🔴
+    with col_direita:
+        for idx, row in df_ano.tail(total_mcs - metade).iterrows():
+            metricas = calcular_metricas_mc(row["MC"], df_ano)
+            
+            with st.expander(f"**#{int(row['Ranking'])} {row['MC']}** - {int(row['PTS'])} pts", expanded=False):
+                if metricas:
+                    # Métricas em grid
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        st.metric("Pontuação", metricas["pontos"])
+                        st.metric("Vitórias", metricas.get("vitórias", 0))
+                    with col2:
+                        st.metric("Finais", metricas["finais"])
+                        st.metric("2x0", metricas.get("2x0", 0))
+                    
+                    # Texto de desempenho
+                    st.divider()
+                    st.markdown("#### 🎤 Desempenho")
+                    st.write(gerar_texto_desempenho(metricas))
+                    
+                    # Redes sociais (se configuradas)
+                    if row["MC"] in REDES_SOCIAIS:
+                        st.divider()
+                        st.markdown("#### 🔗 Conecte-se com o artista:")
+                        
+                        # Criar botões para cada rede social
+                        col_redes = st.columns(len(REDES_SOCIAIS[row["MC"]]))
+                        
+                        for idx, rede in enumerate(REDES_SOCIAIS[row["MC"]]):
+                            with col_redes[idx]:
+                                # Botão estilizado
+                                st.markdown(
+                                    f"""
+                                    <a href="{rede['url']}" target="_blank" style="text-decoration: none;">
+                                        <div style="
+                                            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+                                            border: 1px solid #7A1FA255;
+                                            border-radius: 10px;
+                                            padding: 12px 8px;
+                                            text-align: center;
+                                            color: white;
+                                            cursor: pointer;
+                                            transition: all 0.3s ease;
+                                            height: 100%;
+                                        "
+                                        onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(122, 31, 162, 0.3)';"
+                                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';"
+                                        >
+                                            <div style="font-size: 24px; margin-bottom: 6px;">
+                                                {rede['emoji']}
+                                            </div>
+                                            <div style="font-size: 12px; font-weight: 600;">
+                                                {rede['tipo']}
+                                            </div>
+                                        </div>
+                                    </a>
+                                    """,
+                                    unsafe_allow_html=True
+                                )
     
-    for idx, rede in enumerate(REDES_SOCIAIS[row["MC"]]):
-        with col_redes[idx]:
-            # Botão estilizado
-            st.markdown(
-                f"""
-                <a href="{rede['url']}" target="_blank" style="text-decoration: none;">
-                    <div style="
-                        background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
-                        border: 1px solid #7A1FA255;
-                        border-radius: 10px;
-                        padding: 12px 8px;
-                        text-align: center;
-                        color: white;
-                        cursor: pointer;
-                        transition: all 0.3s ease;
-                        height: 100%;
-                    "
-                    onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(122, 31, 162, 0.3)';"
-                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';"
-                    >
-                        <div style="font-size: 24px; margin-bottom: 6px;">
-                            {rede['emoji']}
-                        </div>
-                        <div style="font-size: 12px; font-weight: 600;">
-                            {rede['tipo']}
-                        </div>
-                    </div>
-                </a>
-                """,
-                unsafe_allow_html=True
-            )
-# ─────────────────────────────────────────────
-# RODAPÉ
-# ─────────────────────────────────────────────
-st.markdown("---")
-st.markdown(
-    """
-    <div style="text-align:center; color:#888; font-size:12px;">
-        💚 Larga o Verbo • Dashboard Oficial • {ano}<br>
-        <small>Atualizado automaticamente a partir das planilhas oficiais</small>
-    </div>
-    """.format(ano=ano_selecionado),
-    unsafe_allow_html=True
-)
+    # ─────────────────────────────────────────────
+    # RODAPÉ
+    # ─────────────────────────────────────────────
+    st.markdown("---")
+    st.markdown(
+        """
+        <div style="text-align:center; color:#888; font-size:12px;">
+            💚 Larga o Verbo • Dashboard Oficial • {ano}<br>
+            <small>Atualizado automaticamente a partir das planilhas oficiais</small>
+        </div>
+        """.format(ano=ano_selecionado),
+        unsafe_allow_html=True
+    )
