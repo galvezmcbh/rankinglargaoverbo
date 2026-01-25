@@ -553,7 +553,9 @@ with col2:
         cor_titulo = "#f39c12"
         emoji = "🎧"
     
-    # 3. CRIAR O HTML DO CARD
+   # 3. CRIAR E EXIBIR O CARD (VERSÃO CORRIGIDA)
+    import streamlit.components.v1 as components
+    
     card_html = f"""
     <div style="
         padding:24px;
@@ -564,11 +566,79 @@ with col2:
         height:380px;
         font-family: Arial, sans-serif;
     ">
-        <!-- ... (COLE AQUI TODO O HTML DO CARD ORIGINAL) ... -->
+        <div style="text-align:center; font-size:36px; margin-bottom:10px;">
+            {emoji}
+        </div>
+        
+        <h3 style="
+            color:{cor_titulo};
+            margin-top:0;
+            margin-bottom:14px;
+            font-size:22px;
+            text-align:center;
+            font-weight:800;
+            line-height:1.2;
+        ">
+            {perfil}
+        </h3>
+        
+        <p style="
+            color:#bdbdbd;
+            font-style:italic;
+            text-align:center;
+            margin-bottom:28px;
+            font-size:15px;
+            line-height:1.5;
+            padding:0 8px;
+        ">
+            {descricao}
+        </p>
+        
+        <div style="
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            margin-top: 20px;
+        ">
+            <div style="text-align:center;">
+                <div style="font-size:14px;color:#aaa;margin-bottom:6px;font-weight:600;">🎤 FINAIS</div>
+                <div style="font-size:32px;font-weight:bold;color:#1DB954;line-height:1;">{numero_finais}</div>
+                <div style="font-size:12px;color:#777;margin-top:4px;">(VITÓRIAS + VICES)</div>
+            </div>
+            
+            <div style="text-align:center;">
+                <div style="font-size:14px;color:#aaa;margin-bottom:6px;font-weight:600;">🔊 2x0</div>
+                <div style="font-size:32px;font-weight:bold;color:#7A1FA2;line-height:1;">{numero_2x0}</div>
+                <div style="font-size:12px;color:#777;margin-top:4px;">DOMINÂNCIA</div>
+            </div>
+            
+            <div style="text-align:center;">
+                <div style="font-size:14px;color:#aaa;margin-bottom:6px;font-weight:600;">🏆 VITÓRIAS</div>
+                <div style="font-size:32px;font-weight:bold;color:#FFD700;line-height:1;">{numero_vitorias}</div>
+                <div style="font-size:12px;color:#777;margin-top:4px;">NO TOPO</div>
+            </div>
+            
+            <div style="text-align:center;">
+                <div style="font-size:14px;color:#aaa;margin-bottom:6px;font-weight:600;">📀 EDIÇÕES</div>
+                <div style="font-size:32px;font-weight:bold;color:#3498db;line-height:1;">{participacoes}</div>
+                <div style="font-size:12px;color:#777;margin-top:4px;">PRESENÇAS</div>
+            </div>
+        </div>
+        
+        <div style="
+            margin-top:28px;
+            padding-top:18px;
+            border-top:1px solid #333;
+            text-align:center;
+        ">
+            <div style="font-size:13px;color:#888;font-style:italic;font-weight:500;">
+                {mc_selected} • Larga o Verbo {ano_selecionado}
+            </div>
+        </div>
     </div>
     """
     
-    # 4. EXIBIR O CARD
+    # 4. EXIBIR O CARD - NOME DA VARIÁVEL CORRIGIDO
     components.html(card_html, height=420)
 
 # ─────────────────────────────────────────────
@@ -730,6 +800,7 @@ components.html(
     """,
     height=120
 )
+
 
 
 
