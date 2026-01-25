@@ -7,47 +7,16 @@ import os
 import re
 import streamlit as st
 
-# ============================================
-# 🩺 DIAGNÓSTICO DE PÁGINAS
-# ============================================
-with st.sidebar:
-    st.markdown("### 🔍 DIAGNÓSTICO PÁGINAS")
-    
-    # Verificar estrutura
-    st.write("**📁 Estrutura atual:**")
-    st.write(f"Diretório: `{os.getcwd()}`")
-    
-    # Listar tudo
-    st.write("**Arquivos na raiz:**")
-    for item in sorted(os.listdir(".")):
-        st.write(f"- `{item}`")
-    
-    # Verificar pasta pages
-    if os.path.exists("pages"):
-        st.success("✅ Pasta `pages/` EXISTE")
-        st.write("**Conteúdo de `pages/`:**")
-        for item in sorted(os.listdir("pages")):
-            st.write(f"- `{item}`")
-            
-        # Testar leitura de arquivo
-        test_file = "pages/0_Teste.py"
-        if os.path.exists(test_file):
-            st.success(f"✅ `{test_file}` existe")
-            try:
-                with open(test_file, 'r') as f:
-                    content = f.read()
-                st.write(f"Tamanho: {len(content)} caracteres")
-            except:
-                st.error("❌ Não consegui ler o arquivo")
-        else:
-            st.error(f"❌ `{test_file}` não existe")
-    else:
-        st.error("❌ Pasta `pages/` NÃO EXISTE")
-    
-    # Links de teste
-    st.markdown("### 🔗 Testar páginas:")
-    st.markdown("- [0_Teste](/0_Teste)")
-    st.markdown("- [1_Perfis_dos_MCs](/1_Perfis_dos_MCs)")
+st.sidebar.markdown("### 🐍 VERIFICAÇÃO PYTHON")
+st.sidebar.write(f"**Versão Python:** {sys.version}")
+st.sidebar.write(f"**Versão Streamlit:** {st.__version__}")
+
+# Verificar compatibilidade
+if sys.version_info >= (3, 13):
+    st.sidebar.error("⚠️ Python 3.13 pode ter problemas!")
+    st.sidebar.write("Recomendo mudar para Python 3.10 nas settings")
+else:
+    st.sidebar.success(f"✅ Python {sys.version_info.major}.{sys.version_info.minor} OK")
 def card_lv(titulo, valor, cor):
     st.markdown(
         f"""
@@ -726,6 +695,7 @@ components.html(
     """,
     height=120
 )
+
 
 
 
