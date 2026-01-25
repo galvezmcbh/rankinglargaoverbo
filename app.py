@@ -128,7 +128,8 @@ st.caption("Memória, performance e evolução histórica dos MCs")
 
 ano_selecionado = st.selectbox(
     "📅 Selecione o ano do ranking",
-    sorted(arquivos_anos.keys())
+    sorted(arquivos_anos.keys()),
+    key="ano_selector"  # ← ADICIONE ESTA LINHA
 )
 
 df = pd.read_excel(arquivos_anos[ano_selecionado])
@@ -271,7 +272,8 @@ with col_botao:
 # ←←←←←←←←←←←←← **ESTE SELECTBOX DEVE EXISTIR AQUI!** ←←←←←←←←←←←←←
 mc_selected = st.selectbox(
     "Selecione um MC",
-    sorted(df["MC"].unique())
+    sorted(df["MC"].unique()),
+    key=f"mc_selector_{ano_selecionado}"  # ← CHAVE DINÂMICA
 )
 mc_row = df[df["MC"] == mc_selected].iloc[0]
 
@@ -718,6 +720,7 @@ components.html(
     """,
     height=120
 )
+
 
 
 
