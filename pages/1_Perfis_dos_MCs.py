@@ -156,7 +156,7 @@ def calcular_metricas_mc(mc_nome, df):
     }
     
     # Detectar colunas de resultados
-    for prefixo, nome_amigavel in [("VT", "vitórias"), ("VC", "vices"), ("SM", "semifinais"), ("2x0", "2x0")]:
+    for prefixo, nome_amigavel in [("VT", "vitórias"), ("VC", "vices"), ("SM", "semifinais"), ("2x0", "2x0 (1)")]:
         valor = 0
         for col in df.columns:
             if str(col).upper().startswith(prefixo):
