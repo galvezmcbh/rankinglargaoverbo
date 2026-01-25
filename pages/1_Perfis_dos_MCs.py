@@ -224,16 +224,15 @@ if df_ano is not None:
                     st.divider()
                     st.markdown("#### 🎤 Desempenho")
                     st.write(gerar_texto_desempenho(metricas))
-                    
-                   # Redes sociais (se configuradas) - NOVA VERSÃO COM BOTÕES BONITOS
-        if row["MC"] in REDES_SOCIAIS:
+                    # Redes sociais (se configuradas) - NOVA VERSÃO COM BOTÕES BONITOS
+if row["MC"] in REDES_SOCIAIS:
     st.divider()
     st.markdown("#### 🔗 Conecte-se com o artista:")
     
     # Criar botões para cada rede social
     col_redes = st.columns(len(REDES_SOCIAIS[row["MC"]]))
     
-      for idx, rede in enumerate(REDES_SOCIAIS[row["MC"]]):
+    for idx, rede in enumerate(REDES_SOCIAIS[row["MC"]]):
         with col_redes[idx]:
             # Botão estilizado
             st.markdown(
@@ -264,35 +263,6 @@ if df_ano is not None:
                 """,
                 unsafe_allow_html=True
             )
-    
-    with col_direita:
-        for idx, row in df_ano.tail(total_mcs - metade).iterrows():
-            metricas = calcular_metricas_mc(row["MC"], df_ano)
-            
-            with st.expander(f"**#{int(row['Ranking'])} {row['MC']}** - {int(row['PTS'])} pts", expanded=False):
-                if metricas:
-                    # Métricas em grid
-                    col1, col2 = st.columns(2)
-                    with col1:
-                        st.metric("Pontuação", metricas["pontos"])
-                        st.metric("Vitórias", metricas.get("vitórias", 0))
-                    with col2:
-                        st.metric("Finais", metricas["finais"])
-                        st.metric("2x0", metricas.get("2x0", 0))
-                    
-                    # Texto de desempenho
-                    st.divider()
-                    st.markdown("#### 🎤 Desempenho")
-                    st.write(gerar_texto_desempenho(metricas))
-                    
-                    # Redes sociais
-                    if row["MC"] in REDES_SOCIAIS:
-                        st.divider()
-                        st.markdown("#### 🔗 Redes Sociais")
-                        for rede in REDES_SOCIAIS[row["MC"]]:
-                            st.markdown(f"{rede['emoji']} [{rede['tipo']}]({rede['url']})")
-    
-
 # ─────────────────────────────────────────────
 # RODAPÉ
 # ─────────────────────────────────────────────
