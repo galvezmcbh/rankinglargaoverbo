@@ -47,7 +47,7 @@ st.set_page_config(
 # ─────────────────────────────────────────────
 # CONFIGURAÇÕES GERAIS
 # ─────────────────────────────────────────────
-     st.set_page_config(
+ st.set_page_config(
     page_title="Larga o Verbo | Dashboard",
     layout="wide",
     initial_sidebar_state="collapsed",  # ← Menu lateral fechado
@@ -721,6 +721,7 @@ components.html(
     """,
     height=120
 )
+
 
 
 
