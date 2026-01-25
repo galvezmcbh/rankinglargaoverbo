@@ -259,16 +259,7 @@ if df_ano is not None:
                         for rede in REDES_SOCIAIS[row["MC"]]:
                             st.markdown(f"{rede['emoji']} [{rede['tipo']}]({rede['url']})")
     
-    
-# ─────────────────────────────────────────────
-# BOTÃO VOLTAR
-# ─────────────────────────────────────────────
-st.divider()
-col_voltar, col_espaco = st.columns([1, 3])
-with col_voltar:
-   if st.button("⬅️ Voltar", type="primary"):
-    # Use navegação por URL (sempre funciona)
-    st.markdown('<meta http-equiv="refresh" content="0; url=./">', unsafe_allow_html=True)
+
 # ─────────────────────────────────────────────
 # RODAPÉ
 # ─────────────────────────────────────────────
