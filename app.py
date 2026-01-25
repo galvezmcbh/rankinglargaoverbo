@@ -246,8 +246,7 @@ col_titulo, col_botao = st.columns([4, 1])
 with col_titulo:
     st.subheader("🧬 Análise Individual")
 with col_botao:
-    if st.button("📋 Ver Perfis Completos", use_container_width=True):
-        st.query_params["page"] = "perfis"
+    st.markdown('[📋 **Ver Perfis Completos**](./1_Perfis_dos_MCs)', unsafe_allow_html=True)
 # ←←←←←←←←←←←←← **ESTE SELECTBOX DEVE EXISTIR AQUI!** ←←←←←←←←←←←←←
 mc_selected = st.selectbox(
     "Selecione um MC",
@@ -698,6 +697,7 @@ components.html(
     """,
     height=120
 )
+
 
 
 
