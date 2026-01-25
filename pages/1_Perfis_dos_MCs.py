@@ -172,33 +172,40 @@ def calcular_metricas_mc(mc_nome, df):
     return metricas
 
 def gerar_texto_desempenho(metricas):
-    """Gera um texto descritivo sobre o desempenho do MC"""
+    """Gera texto descritivo sobre o desempenho do MC"""
+    
+    # 1. PRIMEIRO: Verificar se tem texto personalizado
+    mc_nome = metricas["nome"]
+    if mc_nome in TEXTOS_PERSONALIZADOS:
+        return TEXTOS_PERSONALIZADOS[mc_nome]
+    
+    # 2. SE NÃO: Gerar texto automático baseado nas métricas
     textos = []
     
     if metricas["pontos"] > 40:
-        textos.append(f"Potência do ranking com **{metricas['pontos']} pontos** acumulados.")
+        textos.append(f"**Potência do ranking** com **{metricas['pontos']} pontos** acumulados.")
     elif metricas["pontos"] > 20:
-        textos.append(f"Presença sólida com **{metricas['pontos']} pontos**.")
+        textos.append(f"Presença sólida com **{metricas['pontos']} pontos** no histórico.")
     else:
-        textos.append(f"**{metricas['pontos']} pontos** no histórico.")
+        textos.append(f"**{metricas['pontos']} pontos** registrados no circuito.")
     
     if metricas["finais"] >= 5:
         textos.append(f"Finalista experiente com **{metricas['finais']} finais** disputadas.")
     elif metricas["finais"] >= 1:
-        textos.append(f"Já chegou na final **{metricas['finais']} vez(es)**.")
+        textos.append(f"Já chegou na final **{metricas['finais']} vez(es)**, mostrando potencial.")
     
     if metricas.get("2x0", 0) >= 3:
-        textos.append(f"Estilo dominante: **{metricas['2x0']} vitórias 2x0**.")
+        textos.append(f"Estilo dominante com **{metricas['2x0']} vitórias 2x0**.")
     
     if metricas.get("vitórias", 0) >= 3:
-        textos.append(f"Vencedor nato com **{metricas['vitórias']} vitórias**.")
+        textos.append(f"Vencedor nato com **{metricas['vitórias']} conquistas**.")
     
     if metricas["ranking"] == 1:
-        textos.append("**Já liderou o ranking!**")
+        textos.append("**Já liderou o ranking**, mostrando superioridade técnica.")
     elif metricas["ranking"] and metricas["ranking"] <= 3:
         textos.append(f"Já esteve no **top {metricas['ranking']}** do ranking.")
     
-    return " ".join(textos) if textos else "Em construção no Larga o Verbo."
+    return " ".join(textos) if textos else "Em construção no Larga o Verbo, escrevendo sua história."
 
 # ─────────────────────────────────────────────
 # INTERFACE PRINCIPAL
