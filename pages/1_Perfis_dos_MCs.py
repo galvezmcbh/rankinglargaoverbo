@@ -22,7 +22,7 @@ st.set_page_config(
 # ─────────────────────────────────────────────
 col_voltar, col_titulo = st.columns([1, 4])
 with col_voltar:
-   if st.button("⬅️ Voltar para o Dashboard Principal", type="primary"):
+   if st.button("⬅️ Voltar", type="primary"):
     # Use navegação por URL (sempre funciona)
     st.markdown('<meta http-equiv="refresh" content="0; url=./">', unsafe_allow_html=True)
 with col_titulo:
