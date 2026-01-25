@@ -86,7 +86,39 @@ REDES_SOCIAIS = {
     #     {"tipo": "TikTok", "url": "link", "emoji": "🎵"}
     # ]
 }
+# ─────────────────────────────────────────────
+# DICIONÁRIO DE TEXTOS PERSONALIZADOS POR MC
+# ─────────────────────────────────────────────
+# Aqui você pode adicionar textos personalizados para cada MC
+# Se um MC não estiver aqui, será usado o texto automático
 
+TEXTOS_PERSONALIZADOS = {
+    "Galvez": """
+    **Lenda viva do Larga o Verbo!** Com múltiplos títulos e presença constante nas finais,
+    Galvez é referência técnica e de postura dentro do circuito. Sua evolução ao longo das
+    edições mostra um MC que veio para ficar e ditar o ritmo das batalhas.
+    """,
+    
+    "KVL": """
+    **Potência criativa em microfone!** KVL combina flow preciso com letras afiadas,
+    sendo um dos nomes mais consistentes do ranking. Sua capacidade de se reinventar
+    a cada batalha faz dele um adversário temido por todos.
+    """,
+    
+    "Foco na Rima": """
+    **Técnica apurada e entrega intensa!** Conhecido pela preparação impecável e
+    performances eletrizantes, Foco na Rima é sinônimo de profissionalismo no cenário.
+    Cada aparição é aula de construção de personagem e timing.
+    """,
+    
+    # ADICIONE MAIS MCs AQUI!
+    # Formato:
+    # "NOME DO MC": """
+    #     Seu texto personalizado aqui.
+    #     Pode ter múltiplas linhas.
+    #     Use **negrito** e *itálico* se quiser.
+    # """
+}
 # ─────────────────────────────────────────────
 # FUNÇÕES AUXILIARES
 # ─────────────────────────────────────────────
