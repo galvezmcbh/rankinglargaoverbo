@@ -119,7 +119,45 @@ for arq in os.listdir("."):
 if not arquivos_anos:
     st.error("Nenhuma planilha .xlsx com ano no nome foi encontrada.")
     st.stop()
-
+# ─────────────────────────────────────────────
+# 🗃️ FUNÇÃO COM CACHE PARA DADOS HISTÓRICOS
+# ─────────────────────────────────────────────
+@st.cache_data(ttl=3600)  # Cache válido por 1 hora (3600 segundos)
+def carregar_historico_completo(_arquivos_anos):
+    """
+    Carrega todos os dados históricos com cache.
+    O underscore (_arquivos_anos) é necessário para objetos não hashable.
+    """
+    import pandas as pd
+    
+    dfs = []
+    for ano, arq in _arquivos_anos.items():
+        try:
+            # Carrega o arquivo Excel
+            temp = pd.read_excel(arq)
+            
+            # Padroniza nomes das colunas
+            temp.columns = temp.columns.str.strip()
+            
+            # Preenche valores nulos
+            temp.fillna(0, inplace=True)
+            
+            # Adiciona coluna de ano
+            temp["Ano"] = int(ano)
+            
+            dfs.append(temp)
+            
+            # Log opcional (aparece apenas na primeira execução)
+            print(f"✅ Carregado: {arq} ({ano})")
+            
+        except Exception as e:
+            print(f"⚠️ Erro ao carregar {arq}: {str(e)}")
+            continue
+    
+    if dfs:
+        return pd.concat(dfs, ignore_index=True)
+    else:
+        return pd.DataFrame()  # Retorna DataFrame vazio se não houver dados
 # ─────────────────────────────────────────────
 # TOPO
 # ─────────────────────────────────────────────
@@ -720,6 +758,7 @@ components.html(
     """,
     height=120
 )
+
 
 
 
