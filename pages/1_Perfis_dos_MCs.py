@@ -9,8 +9,23 @@ import re
 st.set_page_config(
     page_title="Larga o Verbo | Perfis dos MCs",
     layout="wide",
-    page_icon="🎤"
+    initial_sidebar_state="collapsed",  # Menu fechado
+    menu_items={
+        'Get Help': None,
+        'Report a bug': None,
+        'About': None
+    }
 )
+
+# ─────────────────────────────────────────────
+# BOTÃO VOLTAR FIXO NO TOPO
+# ─────────────────────────────────────────────
+col_voltar, col_titulo = st.columns([1, 4])
+with col_voltar:
+    if st.button("⬅️ Voltar", type="primary"):
+        st.switch_page("app.py")
+with col_titulo:
+    st.title("📋 Perfis dos MCs")
 
 # ─────────────────────────────────────────────
 # ESTILO (igual ao app principal)
