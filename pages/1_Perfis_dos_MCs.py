@@ -63,14 +63,14 @@ REDES_SOCIAIS = {
         {"tipo": "Instagram", "url": "https://instagram.com/galvezmcbh", "emoji": "📱"}
     ],
     "KVL": [
-        {"tipo": "Instagram", "url": "https://instagram.com/kvl.mc", "emoji": "📱"},
-        {"tipo": "YouTube", "url": "https://youtube.com/@kvl", "emoji": "▶️"}
+        {"tipo": "Instagram", "url": "https://instagram.com/kvl.mc", "emoji": "📱"}
     ],
+     
     "Foco na Rima": [
         {"tipo": "Instagram", "url": "https://instagram.com/foconarima", "emoji": "📱"}
     ],
     "Gabriel Mirã": [
-        {"tipo": "Instagram", "url": "https://instagram.com/gabrielmira", "emoji": "📱"}
+        {"tipo": "Instagram", "url": "https://instagram.com/gabrielmiralm", "emoji": "📱"}
     ],
     "Nobert": [
         {"tipo": "Instagram", "url": "https://instagram.com/nobertmc", "emoji": "📱"}
@@ -225,12 +225,45 @@ if df_ano is not None:
                     st.markdown("#### 🎤 Desempenho")
                     st.write(gerar_texto_desempenho(metricas))
                     
-                    # Redes sociais
-                    if row["MC"] in REDES_SOCIAIS:
-                        st.divider()
-                        st.markdown("#### 🔗 Redes Sociais")
-                        for rede in REDES_SOCIAIS[row["MC"]]:
-                            st.markdown(f"{rede['emoji']} [{rede['tipo']}]({rede['url']})")
+                   # Redes sociais (se configuradas) - NOVA VERSÃO COM BOTÕES BONITOS
+      if row["MC"] in REDES_SOCIAIS:
+    st.divider()
+    st.markdown("#### 🔗 Conecte-se com o artista:")
+    
+    # Criar botões para cada rede social
+    col_redes = st.columns(len(REDES_SOCIAIS[row["MC"]]))
+    
+      for idx, rede in enumerate(REDES_SOCIAIS[row["MC"]]):
+        with col_redes[idx]:
+            # Botão estilizado
+            st.markdown(
+                f"""
+                <a href="{rede['url']}" target="_blank" style="text-decoration: none;">
+                    <div style="
+                        background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+                        border: 1px solid #7A1FA255;
+                        border-radius: 10px;
+                        padding: 12px 8px;
+                        text-align: center;
+                        color: white;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        height: 100%;
+                    "
+                    onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(122, 31, 162, 0.3)';"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';"
+                    >
+                        <div style="font-size: 24px; margin-bottom: 6px;">
+                            {rede['emoji']}
+                        </div>
+                        <div style="font-size: 12px; font-weight: 600;">
+                            {rede['tipo']}
+                        </div>
+                    </div>
+                </a>
+                """,
+                unsafe_allow_html=True
+            )
     
     with col_direita:
         for idx, row in df_ano.tail(total_mcs - metade).iterrows():
